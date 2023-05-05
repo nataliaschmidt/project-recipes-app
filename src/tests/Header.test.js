@@ -27,15 +27,15 @@ describe('Testando o componente Header', () => {
   });
 
   it('Verifica se ao clicar no botão de Search ele abre o campo de busca', () => {
-    const { history } = renderWithRouter(<Meals />);
+    renderWithRouter(<Meals />);
     const searchButton = screen.getByRole('button', { name: /search icon/i });
     act(() => {
-      userEvent.click(searchButton)
-    })
+      userEvent.click(searchButton);
+    });
     expect(screen.getByText(/search:/i)).toBeInTheDocument();
     act(() => {
-      userEvent.click(searchButton)
-    })
+      userEvent.click(searchButton);
+    });
     expect(screen.queryByText(/search:/i)).toBe(null);
   });
 });
