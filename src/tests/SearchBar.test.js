@@ -7,12 +7,14 @@ import SearchProvider from '../contexts/SearchContext/SearchProvider';
 import SearchBar from '../components/SearchBar';
 import Meals from '../pages/Meals';
 import { mockChickenIgredient } from './helpers/dataMocks/chickenIngredient';
-// import { OneRecipeArrabiata } from './helpers/dataMocks/oneMealsRecipe';
+import { OneRecipeArrabiata } from './helpers/dataMocks/oneMealsRecipe';
 import Drinks from '../pages/Drinks';
 import { margaritaName } from './helpers/dataMocks/margaritaName';
 import { drinkFirstLetterY } from './helpers/dataMocks/drinkFirstLetter';
 
 const DATA_TESTID_BUTTON_SEARCH = 'exec-search-btn';
+const SEARCH_INPUT = 'search-input';
+const SEARCH_TOP_BTN = 'search-top-btn';
 
 describe('Testando o componente SearchBar', () => {
   it('Verifica se os componentes estão sendo renderizados corretamente na tela', () => {
@@ -24,7 +26,7 @@ describe('Testando o componente SearchBar', () => {
       { initialEntries },
     );
     expect(history.location.pathname).toBe('/meals');
-    const inputSearch = screen.getByRole('textbox', { name: /search:/i });
+    const inputSearch = screen.getByTestId(SEARCH_INPUT);
     const radioIngredient = screen.getByRole('radio', { name: /ingredient/i });
     const radioName = screen.getByRole('radio', { name: /name/i });
     const radioFirstLetter = screen.getByRole('radio', { name: /first letter/i });
@@ -49,11 +51,11 @@ describe('Testando o componente SearchBar', () => {
       { initialEntries },
     );
     expect(history.location.pathname).toBe('/meals');
-    const buttonIconSearch = screen.getByRole('img', { name: /search icon/i });
+    const buttonIconSearch = screen.getByTestId(SEARCH_TOP_BTN);
     act(() => {
       userEvent.click(buttonIconSearch);
     });
-    const inputSearch = screen.getByRole('textbox', { name: /search:/i });
+    const inputSearch = screen.getByTestId(SEARCH_INPUT);
     const radioIngredient = screen.getByRole('radio', { name: /ingredient/i });
     const buttonSearch = screen.getByTestId(DATA_TESTID_BUTTON_SEARCH);
 
@@ -69,40 +71,6 @@ describe('Testando o componente SearchBar', () => {
     });
   });
 
-  // it('Verifica se ao realizar uma pesquisa por name na rota "/meals", e essa lista contem apenas uma receita, se é redirecionado para a página de detalhes desse receita', async () => {
-  //   global.fetch = jest.fn().mockResolvedValue({
-  //     json: jest.fn().mockResolvedValue(OneRecipeArrabiata),
-  //   });
-
-  //   const initialEntries = ['/meals'];
-  //   const { history } = renderWithRouter(
-  //     <SearchProvider>
-  //       <Meals />
-  //     </SearchProvider>,
-  //     { initialEntries },
-  //   );
-  //   expect(history.location.pathname).toBe('/meals');
-  //   const buttonIconSearch = screen.getByRole('img', { name: /search icon/i });
-  //   act(() => {
-  //     userEvent.click(buttonIconSearch);
-  //   });
-  //   const inputSearch = screen.getByRole('textbox', { name: /search:/i });
-  //   const radioName = screen.getByRole('radio', { name: /name/i });
-  //   const buttonSearch = screen.getByTestId('exec-search-btn');
-
-  //   await act(async () => {
-  //     userEvent.type(inputSearch, 'arrabiata');
-  //     userEvent.click(radioName);
-  //     userEvent.click(buttonSearch);
-
-  //     await waitFor(() => {
-  //       const recipesName = screen.getAllByTestId(/card-name/i);
-  //       expect(recipesName.length).toEqual(1);
-  //       expect(history.location.pathname).toBe('/meals/52771');
-  //     });
-  //   });
-  // });
-
   it('Verifica se ao realizar uma pesquisa por name na rota "/drinks", a lista aparece na tela', async () => {
     global.fetch = jest.fn().mockResolvedValue({
       json: jest.fn().mockResolvedValue(margaritaName),
@@ -116,11 +84,11 @@ describe('Testando o componente SearchBar', () => {
       { initialEntries },
     );
     expect(history.location.pathname).toBe('/drinks');
-    const buttonIconSearch = screen.getByRole('img', { name: /search icon/i });
+    const buttonIconSearch = screen.getByTestId(SEARCH_TOP_BTN);
     act(() => {
       userEvent.click(buttonIconSearch);
     });
-    const inputSearch = screen.getByRole('textbox', { name: /search:/i });
+    const inputSearch = screen.getByTestId(SEARCH_INPUT);
     const radioName = screen.getByRole('radio', { name: /name/i });
     const buttonSearch = screen.getByTestId(DATA_TESTID_BUTTON_SEARCH);
 
@@ -149,11 +117,11 @@ describe('Testando o componente SearchBar', () => {
       { initialEntries },
     );
     expect(history.location.pathname).toBe('/drinks');
-    const buttonIconSearch = screen.getByRole('img', { name: /search icon/i });
+    const buttonIconSearch = screen.getByTestId(SEARCH_TOP_BTN);
     act(() => {
       userEvent.click(buttonIconSearch);
     });
-    const inputSearch = screen.getByRole('textbox', { name: /search:/i });
+    const inputSearch = screen.getByTestId(SEARCH_INPUT);
     const radioFirstLetter = screen.getByRole('radio', { name: /first letter/i });
     const buttonSearch = screen.getByTestId(DATA_TESTID_BUTTON_SEARCH);
 
@@ -180,11 +148,11 @@ describe('Testando o componente SearchBar', () => {
       { initialEntries },
     );
     expect(history.location.pathname).toBe('/drinks');
-    const buttonIconSearch = screen.getByRole('img', { name: /search icon/i });
+    const buttonIconSearch = screen.getByTestId(SEARCH_TOP_BTN);
     act(() => {
       userEvent.click(buttonIconSearch);
     });
-    const inputSearch = screen.getByRole('textbox', { name: /search:/i });
+    const inputSearch = screen.getByTestId(SEARCH_INPUT);
     const radioFirstLetter = screen.getByRole('radio', { name: /first letter/i });
     const buttonSearch = screen.getByTestId(DATA_TESTID_BUTTON_SEARCH);
 
@@ -214,11 +182,11 @@ describe('Testando o componente SearchBar', () => {
         { initialEntries },
       );
     });
-    const buttonIconSearch = screen.getByRole('img', { name: /search icon/i });
+    const buttonIconSearch = screen.getByTestId(SEARCH_TOP_BTN);
     await act(async () => {
       userEvent.click(buttonIconSearch);
     });
-    const inputSearch = screen.getByRole('textbox', { name: /search:/i });
+    const inputSearch = screen.getByTestId(SEARCH_INPUT);
     const radioName = screen.getByRole('radio', { name: /name/i });
     const buttonSearch = screen.getByTestId(DATA_TESTID_BUTTON_SEARCH);
 
@@ -230,5 +198,35 @@ describe('Testando o componente SearchBar', () => {
 
     expect(alertMock).toHaveBeenCalledTimes(1);
     expect(alertMock).toHaveBeenCalledWith('Sorry, we haven\'t found any recipes for these filters.');
+  });
+
+  it('Verifica se ao realizar uma pesquisa por name na rota "/meals", e essa lista contem apenas uma receita, se é redirecionado para a página de detalhes desse receita', async () => {
+    global.fetch = jest.fn().mockResolvedValue({
+      json: jest.fn().mockResolvedValue(OneRecipeArrabiata),
+    });
+    const initialEntries = ['/meals'];
+    const { history } = renderWithRouter(
+      <SearchProvider>
+        <Meals />
+      </SearchProvider>,
+      { initialEntries },
+    );
+    expect(history.location.pathname).toBe('/meals');
+    const buttonIconSearch = screen.getByTestId(SEARCH_TOP_BTN);
+    act(() => {
+      userEvent.click(buttonIconSearch);
+    });
+    const inputSearch = screen.getByTestId(SEARCH_INPUT);
+    const radioName = screen.getByRole('radio', { name: /name/i });
+    const buttonSearch = screen.getByTestId('exec-search-btn');
+
+    act(() => {
+      userEvent.type(inputSearch, 'arrabiata');
+      userEvent.click(radioName);
+      userEvent.click(buttonSearch);
+    });
+    await waitFor(() => {
+      expect(history.location.pathname).toBe('/meals/52771');
+    });
   });
 });

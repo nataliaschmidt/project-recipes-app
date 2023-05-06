@@ -7,15 +7,15 @@ import Meals from '../pages/Meals';
 import SearchProvider from '../contexts/SearchContext/SearchProvider';
 
 describe('Testando o componente Header', () => {
-  it('Verifica se os elementos aparevem corretamente na tela', () => {
+  it('Verifica se os elementos aparecem corretamente na tela', () => {
     renderWithRouter(
       <SearchProvider>
         <Meals />
       </SearchProvider>,
     );
-    const profileButton = screen.getByRole('button', { name: /perfil icon/i });
+    const profileButton = screen.getByTestId('profile-top-btn');
     const title = screen.getByTestId('page-title');
-    const searchButton = screen.getByRole('button', { name: /search icon/i });
+    const searchButton = screen.getByTestId('search-top-btn');
     expect(profileButton).toBeInTheDocument();
     expect(title).toHaveTextContent('Meals');
     expect(searchButton).toBeInTheDocument();
@@ -27,7 +27,7 @@ describe('Testando o componente Header', () => {
         <Meals />
       </SearchProvider>,
     );
-    const profileButton = screen.getByRole('button', { name: /perfil icon/i });
+    const profileButton = screen.getByTestId('profile-top-btn');
 
     act(() => {
       userEvent.click(profileButton);
@@ -41,14 +41,14 @@ describe('Testando o componente Header', () => {
         <Meals />
       </SearchProvider>,
     );
-    const searchButton = screen.getByRole('button', { name: /search icon/i });
+    const searchButton = screen.getByTestId('search-top-btn');
     act(() => {
       userEvent.click(searchButton);
     });
-    expect(screen.getByText(/search:/i)).toBeInTheDocument();
+    expect(screen.getByTestId('search-input')).toBeInTheDocument();
     act(() => {
       userEvent.click(searchButton);
     });
-    expect(screen.queryByText(/search:/i)).toBe(null);
+    expect(screen.queryByTestId('search-input')).toBe(null);
   });
 });
