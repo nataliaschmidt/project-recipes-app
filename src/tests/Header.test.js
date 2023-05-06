@@ -4,10 +4,15 @@ import userEvent from '@testing-library/user-event';
 import { act } from 'react-dom/test-utils';
 import { renderWithRouter } from './helpers/renderWith';
 import Meals from '../pages/Meals';
+import SearchProvider from '../contexts/SearchContext/SearchProvider';
 
 describe('Testando o componente Header', () => {
   it('Verifica se os elementos aparevem corretamente na tela', () => {
-    renderWithRouter(<Meals />);
+    renderWithRouter(
+      <SearchProvider>
+        <Meals />
+      </SearchProvider>,
+    );
     const profileButton = screen.getByRole('button', { name: /perfil icon/i });
     const title = screen.getByTestId('page-title');
     const searchButton = screen.getByRole('button', { name: /search icon/i });
@@ -17,7 +22,11 @@ describe('Testando o componente Header', () => {
   });
 
   it('Verifica se ao clicar no botão de Profile ele direciona para a página de Profile', () => {
-    const { history } = renderWithRouter(<Meals />);
+    const { history } = renderWithRouter(
+      <SearchProvider>
+        <Meals />
+      </SearchProvider>,
+    );
     const profileButton = screen.getByRole('button', { name: /perfil icon/i });
 
     act(() => {
@@ -27,7 +36,11 @@ describe('Testando o componente Header', () => {
   });
 
   it('Verifica se ao clicar no botão de Search ele abre o campo de busca', () => {
-    renderWithRouter(<Meals />);
+    renderWithRouter(
+      <SearchProvider>
+        <Meals />
+      </SearchProvider>,
+    );
     const searchButton = screen.getByRole('button', { name: /search icon/i });
     act(() => {
       userEvent.click(searchButton);

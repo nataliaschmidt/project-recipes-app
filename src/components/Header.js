@@ -14,7 +14,7 @@ export default function Header({ title, searchIcon }) {
   };
 
   return (
-    <>
+    <header>
       <button
         onClick={ () => history.push('/profile') }
         src={ ProfileIcon }
@@ -44,7 +44,7 @@ export default function Header({ title, searchIcon }) {
       {
         isSearched && <SearchBar />
       }
-    </>
+    </header>
   );
 }
 
