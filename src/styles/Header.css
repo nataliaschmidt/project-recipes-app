@@ -1,0 +1,25 @@
+header {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+header > nav {
+  align-items: center;
+  background-color: var(--bg-header);
+  display: flex;
+  height: 52px;
+  justify-content: center;
+  width: 100%;
+}
+
+header > nav > button {
+  background-color: transparent;
+  border: none;
+  color: var(--bg-header-icon);
+}
+
+header > h1 {
+  color: var(--primary-color);
+}

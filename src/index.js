@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
 import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import SearchProvider from './contexts/SearchContext/SearchProvider';
+import './styles/index.css';
 
 ReactDOM
   .createRoot(document.getElementById('root'))
