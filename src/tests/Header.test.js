@@ -5,13 +5,20 @@ import { act } from 'react-dom/test-utils';
 import { renderWithRouter } from './helpers/renderWith';
 import Meals from '../pages/Meals';
 import SearchProvider from '../contexts/SearchContext/SearchProvider';
+import RecipesMealsProvider from '../contexts/RecipesMealsContext/RecipesMealsProvider';
+import RecipesDrinksProvider from '../contexts/RecipesDrinksContext/RecipesDrinksProvider';
 
 describe('Testando o componente Header', () => {
   it('Verifica se os elementos aparecem corretamente na tela', () => {
     renderWithRouter(
-      <SearchProvider>
-        <Meals />
-      </SearchProvider>,
+      <RecipesDrinksProvider>
+        <RecipesMealsProvider>
+          <SearchProvider>
+            <Meals />
+          </SearchProvider>
+          ,
+        </RecipesMealsProvider>
+      </RecipesDrinksProvider>,
     );
     const profileButton = screen.getByTestId('profile-top-btn');
     const title = screen.getByTestId('page-title');
@@ -23,9 +30,14 @@ describe('Testando o componente Header', () => {
 
   it('Verifica se ao clicar no botão de Profile ele direciona para a página de Profile', () => {
     const { history } = renderWithRouter(
-      <SearchProvider>
-        <Meals />
-      </SearchProvider>,
+      <RecipesDrinksProvider>
+        <RecipesMealsProvider>
+          <SearchProvider>
+            <Meals />
+          </SearchProvider>
+          ,
+        </RecipesMealsProvider>
+      </RecipesDrinksProvider>,
     );
     const profileButton = screen.getByTestId('profile-top-btn');
 
@@ -37,9 +49,14 @@ describe('Testando o componente Header', () => {
 
   it('Verifica se ao clicar no botão de Search ele abre o campo de busca', () => {
     renderWithRouter(
-      <SearchProvider>
-        <Meals />
-      </SearchProvider>,
+      <RecipesDrinksProvider>
+        <RecipesMealsProvider>
+          <SearchProvider>
+            <Meals />
+          </SearchProvider>
+          ,
+        </RecipesMealsProvider>
+      </RecipesDrinksProvider>,
     );
     const searchButton = screen.getByTestId('search-top-btn');
     act(() => {

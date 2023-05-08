@@ -5,15 +5,21 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import SearchProvider from './contexts/SearchContext/SearchProvider';
 import './styles/index.css';
+import RecipesMealsProvider from './contexts/RecipesMealsContext/RecipesMealsProvider';
+import RecipesDrinksProvider from './contexts/RecipesDrinksContext/RecipesDrinksProvider';
 
 ReactDOM
   .createRoot(document.getElementById('root'))
   .render(
-    <SearchProvider>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </SearchProvider>,
+    <RecipesDrinksProvider>
+      <RecipesMealsProvider>
+        <SearchProvider>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </SearchProvider>
+      </RecipesMealsProvider>
+    </RecipesDrinksProvider>,
   );
 
 // If you want your app to work offline and load faster, you can change

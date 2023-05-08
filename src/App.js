@@ -1,6 +1,5 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import RecipeDetails from './components/RecipeDetails';
 import RecipeInProgress from './components/RecipeInProgress';
 import Drinks from './pages/Drinks';
 import Login from './pages/Login';
@@ -8,6 +7,10 @@ import Meals from './pages/Meals';
 import DoneRecipes from './pages/DoneRecipes';
 import FavoriteRecipes from './pages/FavoriteRecipes';
 import Profile from './pages/Profile';
+import MealsDetails from './pages/MealsDetails';
+import DrinksDetails from './pages/DrinksDetails';
+
+// CRIANDO A PÀGINA DE FAVORITOS
 
 function App() {
   return (
@@ -16,8 +19,8 @@ function App() {
         <Route exact path="/" component={ Login } />
         <Route exact path="/meals" component={ Meals } />
         <Route exact path="/drinks" component={ Drinks } />
-        <Route exact path="/meals/:id-da-receita" component={ RecipeDetails } />
-        <Route exact path="/drinks/:id-da-receita" component={ RecipeDetails } />
+        <Route exact path="/meals/:idMeals" component={ MealsDetails } />
+        <Route exact path="/drinks/:iDrinks" component={ DrinksDetails } />
         <Route
           exact
           path="/meals/:id-da-receita/in-progress"
