@@ -7,6 +7,7 @@ import Header from '../components/Header';
 import Recipes from '../components/Recipes';
 import RecipesDrinksContext from '../contexts/RecipesDrinksContext/RecipesDrinksContext';
 import SearchContext from '../contexts/SearchContext/SearchContext';
+import RecipesMealsContext from '../contexts/RecipesMealsContext/RecipesMealsContext';
 
 const MAGIC_NUMBER_TWELVE = 12;
 const MAGIC_NUMBER_FIVE = 5;
@@ -16,6 +17,7 @@ export default function Drinks() {
   const { drinksRecipes, setDrinksRecipes,
     categoryDrinks,
     setCategoryDrinks, setResetDrinks, resetDrinks } = useContext(RecipesDrinksContext);
+  const { setMealDetails } = useContext(RecipesMealsContext);
   const [currentCategory, setCurrentCategory] = useState('');
 
   const fetchInitialRecipes = useCallback(async () => {
@@ -68,7 +70,11 @@ export default function Drinks() {
 
       { searchDrinksResult.length > 1 && searchDrinksResult.slice(0, MAGIC_NUMBER_TWELVE)
         .map(({ idDrink, strDrink, strDrinkThumb }, index) => (
-          <Link to={ `/drinks/${idDrink}` } key={ idDrink }>
+          <Link
+            to={ `/drinks/${idDrink}` }
+            key={ idDrink }
+            onClick={ () => setMealDetails({}) }
+          >
             <Recipes
               key={ idDrink }
               image={ strDrinkThumb }
@@ -82,7 +88,11 @@ export default function Drinks() {
         && searchDrinksResult.length === 0
         && drinksRecipes.slice(0, MAGIC_NUMBER_TWELVE)
           .map(({ idDrink, strDrink, strDrinkThumb }, index) => (
-            <Link to={ `/drinks/${idDrink}` } key={ idDrink }>
+            <Link
+              to={ `/drinks/${idDrink}` }
+              key={ idDrink }
+              onClick={ () => setMealDetails({}) }
+            >
               <Recipes
                 key={ idDrink }
                 image={ strDrinkThumb }

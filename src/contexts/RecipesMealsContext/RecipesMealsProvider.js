@@ -9,6 +9,7 @@ function RecipesMealsProvider({ children }) {
   const [resetMeals, setResetMeals] = useState([]);
 
   const [mealDetails, setMealDetails] = useState({});
+  const [drinksRecommendations, setDrinksRecommendations] = useState([]);
 
   const context = useMemo(() => ({
     mealsRecipes,
@@ -19,8 +20,10 @@ function RecipesMealsProvider({ children }) {
     setResetMeals,
     mealDetails,
     setMealDetails,
-  }), [mealsRecipes, categoryMeals, resetMeals, mealDetails]);
-
+    drinksRecommendations,
+    setDrinksRecommendations,
+  }), [mealsRecipes, categoryMeals, resetMeals, mealDetails, drinksRecommendations]);
+  console.log(drinksRecommendations);
   return (
     <RecipesMealsContext.Provider value={ context }>
       {children}

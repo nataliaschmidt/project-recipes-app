@@ -8,8 +8,14 @@ const MAGIC_NUMBER_INGREDIENTS_LIST = 15;
 export default function DrinksDetails() {
   const { pathname } = useLocation();
   const idDrink = pathname.split('/')[2];
-  const { drinkDetails, setDrinkDetails } = useContext(RecipesDrinksContext);
+  const {
+    drinkDetails,
+    setDrinkDetails,
+    mealsRecommendations,
+    setMealsRecommendations,
+  } = useContext(RecipesDrinksContext);
   console.log(drinkDetails);
+  console.log(mealsRecommendations);
   const fetchDrinkDetails = useCallback(async () => {
     const response = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${idDrink}`);
     const data = await response.json();
@@ -41,9 +47,18 @@ export default function DrinksDetails() {
     setDrinkDetails(recipeDetails);
   }, [idDrink, setDrinkDetails]);
 
+  const fetchMealsRecommendations = useCallback(async () => {
+    const MAX_RECOMMENDED_NUMBER = 6;
+    const response = await fetch('https://www.themealdb.com/api/json/v1/1/search.php?s=');
+    const data = await response.json();
+    const recommended = data.meals.slice(0, MAX_RECOMMENDED_NUMBER);
+    setMealsRecommendations(recommended);
+  }, [setMealsRecommendations]);
+
   useEffect(() => {
     fetchDrinkDetails();
-  }, [fetchDrinkDetails]);
+    fetchMealsRecommendations();
+  }, [fetchDrinkDetails, fetchMealsRecommendations]);
 
   return (
     <RecipeDetails />
