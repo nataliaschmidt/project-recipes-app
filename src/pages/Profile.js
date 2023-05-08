@@ -1,11 +1,22 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
 
 export default function Profile() {
   const history = useHistory();
-  const { email } = JSON.parse(localStorage.getItem('user'));
+  const [email, setEmail] = useState('');
+
+  const checkEmail = () => {
+    if (JSON.parse(localStorage.getItem('user') !== null)) {
+      const emailLocalStorage = JSON.parse(localStorage.getItem('user'));
+      setEmail(emailLocalStorage.email);
+    }
+  };
+
+  useEffect(() => {
+    checkEmail();
+  }, []);
 
   const handleLogout = () => {
     history.push('/');
