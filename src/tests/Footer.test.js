@@ -1,26 +1,18 @@
 import { screen } from '@testing-library/react';
 import React from 'react';
 import userEvent from '@testing-library/user-event';
-import Meals from '../pages/Meals';
 import { renderWithRouter } from './helpers/renderWith';
-import SearchProvider from '../contexts/SearchContext/SearchProvider';
+import Footer from '../components/Footer';
 
 describe('Testando a página de Login', () => {
-  it('verifica se ao clicar botão de drinks, vai para a rota drinks e se clicar no botão de mels vai para a rota meals', () => {
-    const initialEntries = ['/meals'];
-    const { history } = renderWithRouter(
-      <SearchProvider>
-        <Meals />
-      </SearchProvider>,
-      { initialEntries },
-    );
-    expect(history.location.pathname).toBe('/meals');
-    const buttonFooterDrink = screen.getByTestId('drinks-bottom-btn');
-    userEvent.click(buttonFooterDrink);
+  it('verifica se ao clicar botão de drinks, vai para a rota drinks e se ao clicar no botão de meals vai para a rota meals', () => {
+    const { history } = renderWithRouter(<Footer />);
+    const buttonDrink = screen.getByTestId('drinks-bottom-btn');
+    userEvent.click(buttonDrink);
     expect(history.location.pathname).toBe('/drinks');
 
-    const buttonFooterMeals = screen.getByTestId('meals-bottom-btn');
-    userEvent.click(buttonFooterMeals);
+    const buttonMeals = screen.getByTestId('meals-bottom-btn');
+    userEvent.click(buttonMeals);
     expect(history.location.pathname).toBe('/meals');
   });
 });
