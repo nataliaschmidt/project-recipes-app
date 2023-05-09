@@ -1,11 +1,14 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import '../styles/RecipeInProgress.css';
 
 export default function RecipeInProgress() {
+  const [isChecked, setIsChecked] = useState(false);
+  const [checkedList, setCheckedList] = useState([]);
   const [recipeInProgress, setRecipeInProgress] = useState({});
   const location = useLocation();
   const id = location.pathname.split('/')[2];
-  console.log(recipeInProgress);
+  console.log(checkedList);
 
   const fetchRecipeInProgressMeals = useCallback(async () => {
     const response = await fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`);
@@ -79,6 +82,18 @@ export default function RecipeInProgress() {
     setRecipeInProgress(recipeDetails);
   }, [id]);
 
+  const handleChangeCheckbox = (target) => {
+    console.log(target);
+    const { value } = target;
+    if (!checkedList.includes(value)) {
+      setCheckedList((prevState) => [...prevState, value]);
+    }
+    if (checkedList.includes(value)) {
+      const newCheckedList = checkedList.filter((item) => item !== value);
+      setCheckedList(newCheckedList);
+    }
+  };
+
   useEffect(() => {
     if (!JSON.parse(localStorage.getItem('inProgressRecipes'))) {
       localStorage.setItem('inProgressRecipes', JSON.stringify({}));
@@ -119,8 +134,20 @@ export default function RecipeInProgress() {
         {
           recipeInProgress.ingredients?.map(({ ingredient, measure }, index) => (
             <li key={ index }>
-              <label data-testid={ `${index}-ingredient-step` }>
-                <input type="checkbox" />
+              <label
+                data-testid={ `${index}-ingredient-step` }
+                className={ checkedList.includes(ingredient)
+                  ? 'underline-checked'
+                  : '' }
+              >
+                <input
+                  type="checkbox"
+                  value={ ingredient }
+                  name={ ingredient }
+                  checked={ checkedList.includes(ingredient) }
+                  onChange={ ({ target }) => handleChangeCheckbox(target) }
+
+                />
                 {`${measure} - ${ingredient}`}
               </label>
             </li>
