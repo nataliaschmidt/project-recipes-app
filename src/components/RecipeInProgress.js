@@ -1,6 +1,95 @@
-import React, { } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 
 export default function RecipeInProgress() {
+  const [recipeInProgress, setRecipeInProgress] = useState({});
+  const location = useLocation();
+  const id = location.pathname.split('/')[2];
+  console.log(recipeInProgress);
+
+  const fetchRecipeInProgressMeals = useCallback(async () => {
+    const response = await fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`);
+    const data = await response.json();
+    const MAGIC_NUMBER_INGREDIENTS_LIST = 20;
+    const recipeDetails = {
+      id: '',
+      image: '',
+      title: '',
+      category: '',
+      ingredients: [],
+      instructions: '',
+      video: '',
+      type: 'meal',
+      nationality: '',
+    };
+
+    data.meals.forEach((meal) => {
+      recipeDetails.id = meal.idMeal;
+      recipeDetails.image = meal.strMealThumb;
+      recipeDetails.title = meal.strMeal;
+      recipeDetails.category = meal.strCategory;
+
+      for (let index = 1; index <= MAGIC_NUMBER_INGREDIENTS_LIST; index += 1) {
+        if (meal[`strIngredient${index}`]) {
+          recipeDetails.ingredients.push({
+            ingredient: meal[`strIngredient${index}`],
+            measure: meal[`strMeasure${index}`],
+          });
+        }
+      }
+      recipeDetails.instructions = meal.strInstructions;
+      recipeDetails.video = meal.strYoutube;
+      recipeDetails.nationality = meal.strArea;
+    });
+    setRecipeInProgress(recipeDetails);
+  }, [id]);
+
+  const fetchRecipeInProgressDrinks = useCallback(async () => {
+    const response = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${id}`);
+    const data = await response.json();
+    const MAGIC_NUMBER_INGREDIENTS_LIST = 15;
+    const recipeDetails = {
+      id: '',
+      image: '',
+      title: '',
+      alcohol: '',
+      ingredients: [],
+      instructions: '',
+      type: 'drink',
+      nationality: '',
+      category: '',
+    };
+    data.drinks.forEach((drink) => {
+      recipeDetails.id = drink.idDrink;
+      recipeDetails.image = drink.strDrinkThumb;
+      recipeDetails.title = drink.strDrink;
+      recipeDetails.alcohol = drink.strAlcoholic;
+
+      for (let index = 1; index <= MAGIC_NUMBER_INGREDIENTS_LIST; index += 1) {
+        if (drink[`strIngredient${index}`]) {
+          recipeDetails.ingredients.push({
+            ingredient: drink[`strIngredient${index}`],
+            measure: drink[`strMeasure${index}`],
+          });
+        }
+      }
+      recipeDetails.instructions = drink.strInstructions;
+      recipeDetails.category = drink.strCategory;
+    });
+    setRecipeInProgress(recipeDetails);
+  }, [id]);
+
+  useEffect(() => {
+    if (!JSON.parse(localStorage.getItem('inProgressRecipes'))) {
+      localStorage.setItem('inProgressRecipes', JSON.stringify({}));
+    }
+    if (location.pathname.includes('meals')) {
+      fetchRecipeInProgressMeals();
+    } else {
+      fetchRecipeInProgressDrinks();
+    }
+  }, [fetchRecipeInProgressMeals, fetchRecipeInProgressDrinks, location.pathname]);
+
   return (
     <>
       <button
@@ -27,7 +116,17 @@ export default function RecipeInProgress() {
       <p data-testid="recipe-category">Categoria</p>
       <h3>Ingredients</h3>
       <ul>
-        <li>Ingredientes</li>
+        {
+          recipeInProgress.ingredients?.map(({ ingredient, measure }, index) => (
+            <li key={ index }>
+              <label data-testid={ `${index}-ingredient-step` }>
+                <input type="checkbox" />
+                {`${measure} - ${ingredient}`}
+              </label>
+            </li>
+
+          ))
+        }
 
       </ul>
       <h3>Instructions</h3>
