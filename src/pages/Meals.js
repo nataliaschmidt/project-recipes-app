@@ -8,12 +8,14 @@ import Recipes from '../components/Recipes';
 import RecipesContext from '../contexts/RecipesMealsContext/RecipesMealsContext';
 
 import SearchContext from '../contexts/SearchContext/SearchContext';
+import RecipesDrinksContext from '../contexts/RecipesDrinksContext/RecipesDrinksContext';
 
 const MAGIC_NUMBER_TWELVE = 12;
 const MAGIC_NUMBER_FIVE = 5;
 
 export default function Meals() {
   const { searchMealsResult } = useContext(SearchContext);
+  const { setDrinkDetails } = useContext(RecipesDrinksContext);
   const { mealsRecipes, setMealsRecipes,
     setCategoryMeals, categoryMeals,
     setResetMeals, resetMeals } = useContext(RecipesContext);
@@ -35,6 +37,9 @@ export default function Meals() {
   }, [setCategoryMeals]);
 
   useEffect(() => {
+    if (!JSON.parse(localStorage.getItem('favoriteRecipes'))) {
+      localStorage.setItem('favoriteRecipes', JSON.stringify([]));
+    }
     fetchInitialRecipes();
     fetchCategorys();
   }, [fetchCategorys, fetchInitialRecipes]);
@@ -69,7 +74,11 @@ export default function Meals() {
       {/* REQUISITO 14 -> RENDERIZAR AS 12 PRIMEIRAS RECEITAS DA BUSCA */}
       {searchMealsResult.length > 1 && searchMealsResult.slice(0, MAGIC_NUMBER_TWELVE)
         .map(({ idMeal, strMeal, strMealThumb }, index) => (
-          <Link to={ `/meals/${idMeal}` } key={ idMeal }>
+          <Link
+            to={ `/meals/${idMeal}` }
+            key={ idMeal }
+            onClick={ () => setDrinkDetails({}) }
+          >
             <Recipes
               image={ strMealThumb }
               name={ strMeal }
@@ -83,7 +92,11 @@ export default function Meals() {
         && searchMealsResult.length === 0
         && mealsRecipes.slice(0, MAGIC_NUMBER_TWELVE)
           .map(({ idMeal, strMeal, strMealThumb }, index) => (
-            <Link to={ `/meals/${idMeal}` } key={ idMeal }>
+            <Link
+              to={ `/meals/${idMeal}` }
+              key={ idMeal }
+              onClick={ () => setDrinkDetails({}) }
+            >
               <Recipes
                 key={ idMeal }
                 image={ strMealThumb }
