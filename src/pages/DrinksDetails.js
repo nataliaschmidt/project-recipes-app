@@ -14,7 +14,6 @@ export default function DrinksDetails() {
     setDrinkDetails,
     mealsRecommendations,
     setMealsRecommendations,
-    drinkDetails,
     startRecipeDrink,
     setStartRecipeDrink,
     setInProgressRecipesDrink,
@@ -62,11 +61,7 @@ export default function DrinksDetails() {
   }, [setMealsRecommendations]);
 
   const startRecipe = () => {
-    const ingredientesRecipes = drinkDetails.ingredients;
     setStartRecipeDrink(true);
-    const inProgressRecipes = JSON.parse(localStorage.getItem('inProgressRecipes')) || {};
-    inProgressRecipes.drinks = { [idDrink]: ingredientesRecipes };
-    localStorage.setItem('inProgressRecipes', JSON.stringify(inProgressRecipes));
     history.push(`/drinks/${idDrink}/in-progress`);
   };
 

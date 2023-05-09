@@ -1,26 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import React, { } from 'react';
 
 export default function RecipeInProgress() {
-  const [ingredientsRecipeInProgress, setIngredientsRecipeInProgress] = useState();
-  const location = useLocation();
-  const id = location.pathname.split('/')[2];
-  console.log(id);
-  console.log(ingredientsRecipeInProgress);
-  useEffect(() => {
-    const ingredientsRecipesInProgressLocalStorage = JSON
-      .parse(localStorage.getItem('inProgressRecipes'));
-    if (location.pathname.includes('meals')) {
-      const newIngredientsRecipeInProgress = ingredientsRecipesInProgressLocalStorage
-        .meals[id];
-      setIngredientsRecipeInProgress(newIngredientsRecipeInProgress);
-    } else {
-      const newIngredientsRecipeInProgress = ingredientsRecipesInProgressLocalStorage
-        .drinks[id];
-      setIngredientsRecipeInProgress(newIngredientsRecipeInProgress);
-    }
-  }, [location, id]);
-
   return (
     <>
       <button
@@ -47,20 +27,7 @@ export default function RecipeInProgress() {
       <p data-testid="recipe-category">Categoria</p>
       <h3>Ingredients</h3>
       <ul>
-        {
-          ingredientsRecipeInProgress?.map(({ ingredient, measure }, index) => (
-            <li key={ index }>
-              <label
-                data-testid={ `${index}-ingredient-step` }
-                htmlFor={ ingredient }
-              >
-                <input type="checkbox" />
-                {`${measure} - ${ingredient}`}
-              </label>
-            </li>
-
-          ))
-        }
+        <li>Ingredientes</li>
 
       </ul>
       <h3>Instructions</h3>
@@ -69,3 +36,22 @@ export default function RecipeInProgress() {
     </>
   );
 }
+
+// const ingredientesRecipes = mealDetails.ingredients;
+// setStartRecipeMeal(true);
+// const ProgressRecipes = JSON.parse(localStorage.getItem('inProgressRecipes')) || {};
+// ProgressRecipes.meals = { [idMeals]: ingredientesRecipes };
+// localStorage.setItem('inProgressRecipes', JSON.stringify(ProgressRecipes));
+
+// const continueRecipe = useCallback(() => {
+//   const isInProgressRecipes = JSON.parse(localStorage.getItem('inProgressRecipes'));
+//   if (isInProgressRecipes.meals
+//     && Object.keys(isInProgressRecipes.meals)[0] === idMeals) {
+//     console.log();
+//     setInProgressRecipesMeal(true);
+//     setStartRecipeMeal(true);
+//   } else {
+//     setInProgressRecipesMeal(false);
+//     setStartRecipeMeal(false);
+//   }
+// }, [setInProgressRecipesMeal, idMeals, setStartRecipeMeal]);

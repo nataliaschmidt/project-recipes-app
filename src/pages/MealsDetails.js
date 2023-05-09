@@ -16,7 +16,6 @@ export default function MealsDetails() {
     setDrinksRecommendations,
     startRecipeMeal,
     setStartRecipeMeal,
-    mealDetails,
     setInProgressRecipesMeal,
   } = useContext(RecipesMealsContext);
 
@@ -65,16 +64,13 @@ export default function MealsDetails() {
   }, [setDrinksRecommendations]);
 
   const startRecipe = () => {
-    const ingredientesRecipes = mealDetails.ingredients;
     setStartRecipeMeal(true);
-    const ProgressRecipes = JSON.parse(localStorage.getItem('inProgressRecipes')) || {};
-    ProgressRecipes.meals = { [idMeals]: ingredientesRecipes };
-    localStorage.setItem('inProgressRecipes', JSON.stringify(ProgressRecipes));
     history.push(`/meals/${idMeals}/in-progress`);
   };
 
   const continueRecipe = useCallback(() => {
-    const isInProgressRecipes = JSON.parse(localStorage.getItem('inProgressRecipes'));
+    const isInProgressRecipes = JSON
+      .parse(localStorage.getItem('inProgressRecipes')) || {};
     if (isInProgressRecipes.meals
       && Object.keys(isInProgressRecipes.meals)[0] === idMeals) {
       console.log();
@@ -87,9 +83,6 @@ export default function MealsDetails() {
   }, [setInProgressRecipesMeal, idMeals, setStartRecipeMeal]);
 
   useEffect(() => {
-    if (!JSON.parse(localStorage.getItem('inProgressRecipes'))) {
-      localStorage.setItem('inProgressRecipes', JSON.stringify({}));
-    }
     fetchMealDetails();
     fetchDrinksRecommendations();
     continueRecipe();
