@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { useLocation } from 'react-router-dom';
 import RecipesDrinksContext from '../contexts/RecipesDrinksContext/RecipesDrinksContext';
 import RecipesMealsContext from '../contexts/RecipesMealsContext/RecipesMealsContext';
+import '../styles/RecipesDetails.css';
 
 export default function RecipeDetails() {
   const { mealDetails } = useContext(RecipesMealsContext);
@@ -29,6 +30,7 @@ export default function RecipeDetails() {
     (mealDetails.ingredients || drinkDetails.ingredients) && (
       <>
         <img
+          className="recipeDetails-img"
           data-testid="recipe-photo"
           src={ mealImage || drinkImage }
           alt={ `${mealTitle || drinkTitle}` }

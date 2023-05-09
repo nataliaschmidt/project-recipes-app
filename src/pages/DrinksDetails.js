@@ -2,6 +2,7 @@ import React, { useCallback, useContext, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import RecipeDetails from '../components/RecipeDetails';
 import RecipesDrinksContext from '../contexts/RecipesDrinksContext/RecipesDrinksContext';
+import '../styles/Carousel.css';
 
 const MAGIC_NUMBER_INGREDIENTS_LIST = 15;
 
@@ -9,13 +10,10 @@ export default function DrinksDetails() {
   const { pathname } = useLocation();
   const idDrink = pathname.split('/')[2];
   const {
-    drinkDetails,
     setDrinkDetails,
     mealsRecommendations,
     setMealsRecommendations,
   } = useContext(RecipesDrinksContext);
-  console.log(drinkDetails);
-  console.log(mealsRecommendations);
   const fetchDrinkDetails = useCallback(async () => {
     const response = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${idDrink}`);
     const data = await response.json();
@@ -61,6 +59,28 @@ export default function DrinksDetails() {
   }, [fetchDrinkDetails, fetchMealsRecommendations]);
 
   return (
-    <RecipeDetails />
+    <>
+      <RecipeDetails />
+      <div className="carousel">
+        {mealsRecommendations?.map((item, index) => (
+          <div
+            key={ item.strMeal }
+            data-testid={ `${index}-recommendation-card` }
+          >
+            <h3
+              data-testid={ `${index}-recommendation-title` }
+            >
+              {item.strMeal}
+
+            </h3>
+            <img
+              className="carousel-img"
+              src={ item.strMealThumb }
+              alt={ item.strMeal }
+            />
+          </div>
+        ))}
+      </div>
+    </>
   );
 }

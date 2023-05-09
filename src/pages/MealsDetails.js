@@ -1,10 +1,8 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import 'bootstrap/dist/css/bootstrap.css';
-// import Carousel from 'react-bootstrap/Carousel';
-import ReactSimplyCarousel from 'react-simply-carousel';
 import RecipeDetails from '../components/RecipeDetails';
 import RecipesMealsContext from '../contexts/RecipesMealsContext/RecipesMealsContext';
+import '../styles/Carousel.css';
 
 const MAGIC_NUMBER_INGREDIENTS_LIST = 20;
 
@@ -12,12 +10,10 @@ export default function MealsDetails() {
   const { pathname } = useLocation();
   const idMeals = pathname.split('/')[2];
   const {
-    mealDetails,
     setMealDetails,
     drinksRecommendations,
     setDrinksRecommendations,
   } = useContext(RecipesMealsContext);
-  const [activeSlideIndex, setActiveSlideIndex] = useState(0);
   console.log(drinksRecommendations);
   const fetchMealDetails = useCallback(async () => {
     const response = await fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${idMeals}`);
@@ -73,50 +69,9 @@ export default function MealsDetails() {
 
   return (
     <>
-      <RecipeDetails
-        details={ mealDetails }
-      />
-      <ReactSimplyCarousel
-        activeSlideIndex={ activeSlideIndex }
-        onRequestChange={ setActiveSlideIndex }
-        itemsToShow={ 2 }
-        itemsToScroll={ 1 }
-        forwardBtnProps={ {
-          style: {
-            alignSelf: 'center',
-            background: 'black',
-            border: 'none',
-            borderRadius: '50%',
-            color: 'white',
-            cursor: 'pointer',
-            fontSize: '20px',
-            height: 30,
-            lineHeight: 1,
-            textAlign: 'center',
-            width: 30,
-          },
-          children: <span>{'>'}</span>,
-        } }
-        backwardBtnProps={ {
-          style: {
-            alignSelf: 'center',
-            background: 'black',
-            border: 'none',
-            borderRadius: '50%',
-            color: 'white',
-            cursor: 'pointer',
-            fontSize: '20px',
-            height: 30,
-            lineHeight: 1,
-            textAlign: 'center',
-            width: 30,
-          },
-          children: <span>{'<'}</span>,
-        } }
-        speed={ 400 }
-        easing="linear"
-      >
-        {drinksRecommendations.map((item, index) => (
+      <RecipeDetails />
+      <div className="carousel">
+        {drinksRecommendations?.map((item, index) => (
           <div
             key={ item.strDrink }
             data-testid={ `${index}-recommendation-card` }
@@ -127,32 +82,14 @@ export default function MealsDetails() {
               {item.strDrink}
 
             </h3>
-            <img src={ item.strDrinkThumb } alt={ item.strDrink } />
+            <img
+              className="carousel-img"
+              src={ item.strDrinkThumb }
+              alt={ item.strDrink }
+            />
           </div>
         ))}
-      </ReactSimplyCarousel>
-      {/* <Carousel>
-        {
-          drinksRecommendations.map((item, index) => (
-            <Carousel.Item key={ index } className="d-flex">
-              {item.map((subItem, subIndex) => (
-                <div
-                  key={ subItem.strDrink }
-                  data-testid={ `${subIndex}-recommendation-card` }
-                >
-                  <h3
-                    data-testid={ `${subIndex}-recommendation-title` }
-                  >
-                    {subItem.strDrink}
-
-                  </h3>
-                  <img src={ subItem.strDrinkThumb } alt={ subItem.strDrink } />
-                </div>
-              ))}
-            </Carousel.Item>
-          ))
-        }
-      </Carousel> */}
+      </div>
     </>
 
   );
