@@ -2,20 +2,24 @@ import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
 export default function RecipeInProgress() {
-  const [recipeInProgress, setRecipeInProgress] = useState();
+  const [ingredientsRecipeInProgress, setIngredientsRecipeInProgress] = useState();
   const location = useLocation();
-  console.log(recipeInProgress);
+  const id = location.pathname.split('/')[2];
+  console.log(id);
+  console.log(ingredientsRecipeInProgress);
   useEffect(() => {
-    const recipesInProgressLocalStorage = JSON
+    const ingredientsRecipesInProgressLocalStorage = JSON
       .parse(localStorage.getItem('inProgressRecipes'));
     if (location.pathname.includes('meals')) {
-      const newRecipeInProgress = recipesInProgressLocalStorage.meals;
-      setRecipeInProgress(newRecipeInProgress);
+      const newIngredientsRecipeInProgress = ingredientsRecipesInProgressLocalStorage
+        .meals[id];
+      setIngredientsRecipeInProgress(newIngredientsRecipeInProgress);
     } else {
-      const newRecipeInProgress = recipesInProgressLocalStorage.drinks;
-      setRecipeInProgress(newRecipeInProgress);
+      const newIngredientsRecipeInProgress = ingredientsRecipesInProgressLocalStorage
+        .drinks[id];
+      setIngredientsRecipeInProgress(newIngredientsRecipeInProgress);
     }
-  }, [location]);
+  }, [location, id]);
 
   return (
     <>
@@ -43,27 +47,21 @@ export default function RecipeInProgress() {
       <p data-testid="recipe-category">Categoria</p>
       <h3>Ingredients</h3>
       <ul>
-        <li>Lista de ingredientes</li>
-        {/* {
-          location.pathname === `/meals/${mealId}`
-        && (mealIngredients.map((e, index) => (
-          <li key={ index } data-testid={ `${index}-ingredient-name-and-measure` }>
-            {`${e.ingredient} - ${e.measure}`}
-          </li>
-        )))
-        }
         {
-          location.pathname === `/drinks/${drinkId}`
-        && (drinkIngredients.map((e, index) => (
-          <li key={ index } data-testid={ `${index}-ingredient-name-and-measure` }>
-            {e.measure}
-            {' '}
-            -
-            {' '}
-            {e.ingredient}
-          </li>
-        )))
-        } */}
+          ingredientsRecipeInProgress?.map(({ ingredient, measure }, index) => (
+            <li key={ index }>
+              <label
+                data-testid={ `${index}-ingredient-step` }
+                htmlFor={ ingredient }
+              >
+                <input type="checkbox" />
+                {`${measure} - ${ingredient}`}
+              </label>
+            </li>
+
+          ))
+        }
+
       </ul>
       <h3>Instructions</h3>
       <p data-testid="instructions">Instruções</p>
