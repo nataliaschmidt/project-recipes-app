@@ -4,10 +4,16 @@ import { useLocation } from 'react-router-dom';
 import RecipesDrinksContext from '../contexts/RecipesDrinksContext/RecipesDrinksContext';
 import RecipesMealsContext from '../contexts/RecipesMealsContext/RecipesMealsContext';
 import '../styles/RecipesDetails.css';
+import whiteHeartIcon from '../images/whiteHeartIcon.svg';
+import blackHeartIcon from '../images/blackHeartIcon.svg';
 
 export default function RecipeDetails() {
   const { mealDetails } = useContext(RecipesMealsContext);
   const { drinkDetails } = useContext(RecipesDrinksContext);
+  const location = useLocation();
+  const currentId = location.pathname.split('/')[2];
+  const [isFavorite, setIsFavorite] = useState(false);
+
   const [linkCopy, setLinkCopy] = useState('');
   const {
     id: mealId,
@@ -28,8 +34,6 @@ export default function RecipeDetails() {
     instructions: drinkInstructions,
   } = drinkDetails;
 
-  const location = useLocation();
-
   const handleClickCopy = async () => {
     await copy(window.location.href);
     setLinkCopy('Link copied!');
@@ -37,13 +41,19 @@ export default function RecipeDetails() {
 
   useEffect(() => {
     setLinkCopy('');
-  }, []);
-
-  const handleClickFavorite = () => {
-    console.log(drinkDetails);
     if (!JSON.parse(localStorage.getItem('favoriteRecipes'))) {
       localStorage.setItem('favoriteRecipes', JSON.stringify([]));
     }
+    const favoriteLocalStorage = JSON.parse(localStorage.getItem('favoriteRecipes'));
+    const verifyFavoriteRecipe = favoriteLocalStorage
+      .some((recipe) => recipe.id === currentId);
+    if (verifyFavoriteRecipe) {
+      setIsFavorite(true);
+    }
+  }, [currentId]);
+
+  const handleClickFavorite = () => {
+    console.log(drinkDetails);
     let newFavorite = {};
     if (location.pathname.includes('meals')) {
       newFavorite = {
@@ -71,7 +81,14 @@ export default function RecipeDetails() {
     const verifyFavoriteRecipe = favoriteLocalStorage
       .some((recipe) => recipe.id === newFavorite.id);
     if (!verifyFavoriteRecipe) {
-      localStorage.setItem('favoriteRecipes', JSON.stringify([...favoriteLocalStorage, newFavorite]));
+      localStorage.setItem('favoriteRecipes', JSON
+        .stringify([...favoriteLocalStorage, newFavorite]));
+      setIsFavorite(true);
+    } else {
+      const removeFavorite = favoriteLocalStorage
+        .filter((recipe) => recipe.id !== newFavorite.id);
+      localStorage.setItem('favoriteRecipes', JSON.stringify(removeFavorite));
+      setIsFavorite(false);
     }
   };
 
@@ -88,10 +105,13 @@ export default function RecipeDetails() {
         <span>{linkCopy}</span>
 
         <button
-          data-testid="favorite-btn"
           onClick={ handleClickFavorite }
         >
-          Favoritar
+          <img
+            data-testid="favorite-btn"
+            src={ isFavorite ? blackHeartIcon : whiteHeartIcon }
+            alt="Perfil icon"
+          />
 
         </button>
 
