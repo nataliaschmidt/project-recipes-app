@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import RecipeDetails from '../components/RecipeDetails';
 import RecipesDrinksContext from '../contexts/RecipesDrinksContext/RecipesDrinksContext';
 import '../styles/Carousel.css';
@@ -7,17 +7,21 @@ import '../styles/Carousel.css';
 const MAGIC_NUMBER_INGREDIENTS_LIST = 15;
 
 export default function DrinksDetails() {
+  const history = useHistory();
   const { pathname } = useLocation();
   const idDrink = pathname.split('/')[2];
   const {
     setDrinkDetails,
     mealsRecommendations,
     setMealsRecommendations,
+    drinkDetails,
+    startRecipeDrink,
+    setStartRecipeDrink,
+    setInProgressRecipesDrink,
   } = useContext(RecipesDrinksContext);
   const fetchDrinkDetails = useCallback(async () => {
     const response = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${idDrink}`);
     const data = await response.json();
-    console.log(data.drinks);
     const recipeDetails = {
       id: '',
       image: '',
@@ -25,6 +29,9 @@ export default function DrinksDetails() {
       alcohol: '',
       ingredients: [],
       instructions: '',
+      type: 'drink',
+      nationality: '',
+      category: '',
     };
     data.drinks.forEach((drink) => {
       recipeDetails.id = drink.idDrink;
@@ -41,6 +48,7 @@ export default function DrinksDetails() {
         }
       }
       recipeDetails.instructions = drink.strInstructions;
+      recipeDetails.category = drink.strCategory;
     });
     setDrinkDetails(recipeDetails);
   }, [idDrink, setDrinkDetails]);
@@ -53,10 +61,35 @@ export default function DrinksDetails() {
     setMealsRecommendations(recommended);
   }, [setMealsRecommendations]);
 
+  const startRecipe = () => {
+    const ingredientesRecipes = drinkDetails.ingredients;
+    setStartRecipeDrink(true);
+    const inProgressRecipes = JSON.parse(localStorage.getItem('inProgressRecipes')) || {};
+    inProgressRecipes.drinks = { [idDrink]: ingredientesRecipes };
+    localStorage.setItem('inProgressRecipes', JSON.stringify(inProgressRecipes));
+    history.push(`/drinks/${idDrink}/in-progress`);
+  };
+
+  const continueRecipe = useCallback(() => {
+    const isInProgressRecipes = JSON.parse(localStorage.getItem('inProgressRecipes'));
+    if (isInProgressRecipes.drinks
+      && Object.keys(isInProgressRecipes.drinks)[0] === idDrink) {
+      setInProgressRecipesDrink(true);
+      setStartRecipeDrink(true);
+    } else {
+      setInProgressRecipesDrink(false);
+      setStartRecipeDrink(false);
+    }
+  }, [setInProgressRecipesDrink, idDrink, setStartRecipeDrink]);
+
   useEffect(() => {
+    if (!JSON.parse(localStorage.getItem('inProgressRecipes'))) {
+      localStorage.setItem('inProgressRecipes', JSON.stringify({}));
+    }
     fetchDrinkDetails();
     fetchMealsRecommendations();
-  }, [fetchDrinkDetails, fetchMealsRecommendations]);
+    continueRecipe();
+  }, [fetchDrinkDetails, fetchMealsRecommendations, continueRecipe]);
 
   return (
     <>
@@ -81,6 +114,13 @@ export default function DrinksDetails() {
           </div>
         ))}
       </div>
+      <button
+        data-testid="start-recipe-btn"
+        style={ { position: 'fixed', bottom: 0 } }
+        onClick={ startRecipe }
+      >
+        {!startRecipeDrink ? 'Start Recipe' : 'Continue Recipe'}
+      </button>
     </>
   );
 }

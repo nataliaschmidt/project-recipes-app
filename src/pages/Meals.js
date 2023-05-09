@@ -37,6 +37,9 @@ export default function Meals() {
   }, [setCategoryMeals]);
 
   useEffect(() => {
+    if (!JSON.parse(localStorage.getItem('favoriteRecipes'))) {
+      localStorage.setItem('favoriteRecipes', JSON.stringify([]));
+    }
     fetchInitialRecipes();
     fetchCategorys();
   }, [fetchCategorys, fetchInitialRecipes]);
