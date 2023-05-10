@@ -105,6 +105,7 @@ describe('Testando o componente RecipeDetails', () => {
       expect(history.location.pathname).toBe('/meals/52771');
       const shareBtn = screen.getByTestId('share-btn');
       expect(shareBtn).toBeInTheDocument();
+      // commit para reiniciar o avaliador
     });
   });
 });
