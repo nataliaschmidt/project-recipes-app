@@ -14,11 +14,11 @@ export default function DrinksDetails() {
     setDrinkDetails,
     mealsRecommendations,
     setMealsRecommendations,
-    drinkDetails,
     startRecipeDrink,
     setStartRecipeDrink,
     setInProgressRecipesDrink,
   } = useContext(RecipesDrinksContext);
+
   const fetchDrinkDetails = useCallback(async () => {
     const response = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${idDrink}`);
     const data = await response.json();
@@ -62,11 +62,20 @@ export default function DrinksDetails() {
   }, [setMealsRecommendations]);
 
   const startRecipe = () => {
-    const ingredientesRecipes = drinkDetails.ingredients;
     setStartRecipeDrink(true);
-    const inProgressRecipes = JSON.parse(localStorage.getItem('inProgressRecipes')) || {};
-    inProgressRecipes.drinks = { [idDrink]: ingredientesRecipes };
-    localStorage.setItem('inProgressRecipes', JSON.stringify(inProgressRecipes));
+
+    const progressRecipesLocalStorage = JSON
+      .parse(localStorage.getItem('inProgressRecipes'));
+    const updateProgress = {
+      ...progressRecipesLocalStorage,
+      drinks: {
+        ...progressRecipesLocalStorage.drinks,
+        [idDrink]: [],
+      },
+    };
+
+    localStorage.setItem('inProgressRecipes', JSON.stringify(updateProgress));
+
     history.push(`/drinks/${idDrink}/in-progress`);
   };
 
