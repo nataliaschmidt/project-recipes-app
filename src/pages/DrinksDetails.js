@@ -18,6 +18,7 @@ export default function DrinksDetails() {
     setStartRecipeDrink,
     setInProgressRecipesDrink,
   } = useContext(RecipesDrinksContext);
+
   const fetchDrinkDetails = useCallback(async () => {
     const response = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${idDrink}`);
     const data = await response.json();
