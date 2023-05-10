@@ -1,21 +1,25 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import '../styles/RecipeInProgress.css';
-
 import ButtonsFavoriteAndShare from './ButtonsFavoriteAndShare';
 
 export default function RecipeInProgress() {
   const location = useLocation();
   const history = useHistory();
   const id = location.pathname.split('/')[2];
-  console.log(id);
   const getInitialState = () => {
     if (JSON.parse(localStorage.getItem('inProgressRecipes'))) {
       const progressRecipesLocalStorage = JSON
         .parse(localStorage.getItem('inProgressRecipes'));
-      const checkedListInitial = progressRecipesLocalStorage
-        .meals[id] || progressRecipesLocalStorage
-        .drinks[id] || [];
+      let checkedListInitial = [];
+      if (location.pathname.includes('drinks')) {
+        checkedListInitial = progressRecipesLocalStorage
+          .drinks[id] || [];
+      }
+      if (location.pathname.includes('meals')) {
+        checkedListInitial = progressRecipesLocalStorage
+          .meals[id] || [];
+      }
       return checkedListInitial;
     }
     return [];
@@ -61,7 +65,6 @@ export default function RecipeInProgress() {
     });
     setRecipeInProgress(recipeDetails);
   }, [id]);
-
   const fetchRecipeInProgressDrinks = useCallback(async () => {
     const response = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${id}`);
     const data = await response.json();
@@ -97,7 +100,6 @@ export default function RecipeInProgress() {
     });
     setRecipeInProgress(recipeDetails);
   }, [id]);
-
   const saveStatusRecipe = useCallback(() => {
     let updateProgress = [];
     if (location.pathname.includes('meals')) {
@@ -124,7 +126,6 @@ export default function RecipeInProgress() {
     }
     localStorage.setItem('inProgressRecipes', JSON.stringify(updateProgress));
   }, [checkedList, location.pathname, id]);
-
   const handleChangeCheckbox = (target) => {
     const { value } = target;
     if (!checkedList.includes(value)) {
@@ -135,7 +136,6 @@ export default function RecipeInProgress() {
       setCheckedList(newCheckedList);
     }
   };
-
   const checkDisabled = useCallback(() => {
     if (recipeInProgress) {
       if (checkedList.length === recipeInProgress?.ingredients?.length) {
@@ -145,7 +145,6 @@ export default function RecipeInProgress() {
       }
     }
   }, [checkedList.length, recipeInProgress?.ingredients?.length]);
-
   useEffect(() => {
     if (!JSON.parse(localStorage.getItem('inProgressRecipes'))) {
       localStorage.setItem('inProgressRecipes', JSON.stringify({
@@ -165,7 +164,6 @@ export default function RecipeInProgress() {
     }
   }, [fetchRecipeInProgressMeals, id,
     fetchRecipeInProgressDrinks, location.pathname, saveStatusRecipe, checkDisabled]);
-
   const handleClickFinishRecipe = () => {
     let doneRecipe = {};
     if (location.pathname.includes('meals')) {
@@ -199,7 +197,6 @@ export default function RecipeInProgress() {
       .stringify([...doneRecipesLocalStorage, doneRecipe]));
     history.push('/done-recipes');
   };
-
   return (
     <>
       <ButtonsFavoriteAndShare

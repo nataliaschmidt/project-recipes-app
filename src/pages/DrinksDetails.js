@@ -63,6 +63,19 @@ export default function DrinksDetails() {
 
   const startRecipe = () => {
     setStartRecipeDrink(true);
+
+    const progressRecipesLocalStorage = JSON
+      .parse(localStorage.getItem('inProgressRecipes'));
+    const updateProgress = {
+      ...progressRecipesLocalStorage,
+      drinks: {
+        ...progressRecipesLocalStorage.drinks,
+        [idDrink]: [],
+      },
+    };
+
+    localStorage.setItem('inProgressRecipes', JSON.stringify(updateProgress));
+
     history.push(`/drinks/${idDrink}/in-progress`);
   };
 

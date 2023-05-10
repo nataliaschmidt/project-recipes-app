@@ -65,6 +65,19 @@ export default function MealsDetails() {
 
   const startRecipe = () => {
     setStartRecipeMeal(true);
+
+    const progressRecipesLocalStorage = JSON
+      .parse(localStorage.getItem('inProgressRecipes'));
+    const updateProgress = {
+      ...progressRecipesLocalStorage,
+      meals: {
+        ...progressRecipesLocalStorage.meals,
+        [idMeals]: [],
+      },
+    };
+
+    localStorage.setItem('inProgressRecipes', JSON.stringify(updateProgress));
+
     history.push(`/meals/${idMeals}/in-progress`);
   };
 
@@ -83,6 +96,9 @@ export default function MealsDetails() {
   }, [setInProgressRecipesMeal, idMeals, setStartRecipeMeal]);
 
   useEffect(() => {
+    if (!JSON.parse(localStorage.getItem('inProgressRecipes'))) {
+      localStorage.setItem('inProgressRecipes', JSON.stringify({}));
+    }
     fetchMealDetails();
     fetchDrinksRecommendations();
     continueRecipe();
