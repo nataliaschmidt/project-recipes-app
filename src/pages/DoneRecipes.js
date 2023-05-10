@@ -1,16 +1,30 @@
 import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
+import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 import shareIcon from '../images/shareIcon.svg';
 
 export default function DoneRecipes() {
+  const history = useHistory();
   const [doneData, setDoneData] = useState([]);
   const doneLocalStorage = JSON.parse(localStorage.getItem('doneRecipes'));
   const [filter, setFilter] = useState('all');
-  const [copiedLink] = useState(false);
+  const [copiedLink, setCopiedLink] = useState(false);
 
   useEffect(() => {
     setDoneData(doneLocalStorage);
   }, []);
+
+  const copyLink = (type, id) => {
+    setCopiedLink(true);
+    navigator.clipboard.writeText(`${window.location.origin}/${type}s/${id}`);
+  };
+
+  const goToDetails = (type, id) => {
+    history.push(`/${type}s/${id}`);
+    console.log('goTo');
+  };
+
   console.log(doneData);
   return (
     <>
@@ -52,7 +66,7 @@ export default function DoneRecipes() {
             <div key={ index }>
               <button
                 type="button"
-                // onClick={ () => goToDetails(recipe.type, recipe.id) }
+                onClick={ () => goToDetails(recipe.type, recipe.id) }
                 style={ { maxWidth: '350px' } }
               >
                 <img
@@ -69,13 +83,13 @@ export default function DoneRecipes() {
                 { recipe.category }
               </h3>
 
-              {/* <Link to={ `/${recipe.type}s/${recipe.id}` }> */}
-              <h2
-                data-testid={ `${index}-horizontal-name` }
-              >
-                { recipe.name }
-              </h2>
-              {/* </Link> */}
+              <Link to={ `/${recipe.type}s/${recipe.id}` }>
+                <h2
+                  data-testid={ `${index}-horizontal-name` }
+                >
+                  { recipe.name }
+                </h2>
+              </Link>
 
               <h2 data-testid={ `${index}-horizontal-done-date` }>
                 { recipe.doneDate }
@@ -97,7 +111,7 @@ export default function DoneRecipes() {
                 )
               }
 
-              <button>
+              <button onClick={ () => copyLink(recipe.type, recipe.id) }>
                 <img
                   src={ shareIcon }
                   alt="share"
