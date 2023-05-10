@@ -13,7 +13,7 @@ export default function FavoriteRecipes() {
 
   useEffect(() => {
     setFavoriteData(favoriteLocalStorage);
-  }, [favoriteLocalStorage]);
+  }, []);
 
   const unFavorite = (id) => {
     const favoritedStorage = JSON.parse(localStorage.getItem('favoriteRecipes'));
@@ -74,11 +74,13 @@ export default function FavoriteRecipes() {
               <button
                 type="button"
                 onClick={ () => goToDetails(recipe.type, recipe.id) }
+                style={ { maxWidth: '350px' } }
               >
                 <img
                   data-testid={ `${index}-horizontal-image` }
                   src={ recipe.image }
                   alt={ recipe.name }
+                  style={ { maxWidth: '100%' } }
                 />
               </button>
 
