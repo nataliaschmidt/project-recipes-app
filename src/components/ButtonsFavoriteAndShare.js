@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 import copy from 'clipboard-copy';
 import whiteHeartIcon from '../images/whiteHeartIcon.svg';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
-
+// comentando para commitar
 export default function ButtonsFavoriteAndShare(recipeInProgress) {
   const [isFavorite, setIsFavorite] = useState(false);
   const [linkCopy, setLinkCopy] = useState('');
