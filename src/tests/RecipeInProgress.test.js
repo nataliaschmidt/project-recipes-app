@@ -107,7 +107,7 @@ describe(
       };
 
       localStorage.setItem('inProgressRecipes', JSON.stringify(finishRecipeLocalStorage));
-     await act(async () => {
+      await act(async () => {
         renderWithRouter(
           <RecipesDrinksProvider>
             <RecipesMealsProvider>
@@ -130,7 +130,6 @@ describe(
         expect(finishRecipeBtn).toBeEnabled();
 
         userEvent.click(finishRecipeBtn);
-
       });
     });
 
