@@ -79,7 +79,7 @@ export default function ButtonsFavoriteAndShare(recipeInProgress) {
         Compartilhar
 
       </button>
-      <span>{linkCopy}</span>
+      <span data-testid="text-share">{linkCopy}</span>
 
       <button
         onClick={ () => handleClickFavorite(recipeInProgress) }

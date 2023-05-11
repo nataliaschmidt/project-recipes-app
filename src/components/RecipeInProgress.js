@@ -27,7 +27,6 @@ export default function RecipeInProgress() {
   const [isDisabled, setIsDisabled] = useState(true);
   const [checkedList, setCheckedList] = useState(getInitialState());
   const [recipeInProgress, setRecipeInProgress] = useState({});
-  console.log(recipeInProgress);
   const fetchRecipeInProgressMeals = useCallback(async () => {
     const response = await fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`);
     const data = await response.json();
