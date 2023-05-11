@@ -8,6 +8,9 @@ import RecipesDrinksProvider from '../contexts/RecipesDrinksContext/RecipesDrink
 import mockFetch, { MEALDB_URL, COCKTAILDB_URL, MealID, DrinkID } from './helpers/dataMocks/fetch';
 import App from '../App';
 
+const pathnameMeals = '/meals/52771';
+const pushMeals = 'meals/52771';
+
 describe('Testando o componente RecipeDetails', () => {
   beforeEach(() => {
     global.fetch = jest.fn(mockFetch);
@@ -30,12 +33,12 @@ describe('Testando o componente RecipeDetails', () => {
       </RecipesDrinksProvider>,
       { initialEntries },
     );
-    history.push('meals/52771');
+    history.push(pushMeals);
 
     await waitFor(() => {
       expect(fetch).toHaveBeenCalledWith(MealID);
       expect(fetch).toHaveBeenCalledWith(COCKTAILDB_URL);
-      expect(history.location.pathname).toBe('/meals/52771');
+      expect(history.location.pathname).toBe(pathnameMeals);
     });
   });
   it('testa se os fetchs são chamados corretamente em drinks', async () => {
@@ -73,11 +76,11 @@ describe('Testando o componente RecipeDetails', () => {
       </RecipesDrinksProvider>,
       { initialEntries },
     );
-    history.push('meals/52771');
+    history.push(pushMeals);
     await waitFor(() => {
       expect(fetch).toHaveBeenCalledWith(MealID);
       expect(fetch).toHaveBeenCalledWith(COCKTAILDB_URL);
-      expect(history.location.pathname).toBe('/meals/52771');
+      expect(history.location.pathname).toBe(pathnameMeals);
 
       const starRecipeBtn = screen.getByTestId('start-recipe-btn');
       userEvent.click(starRecipeBtn);
@@ -98,11 +101,11 @@ describe('Testando o componente RecipeDetails', () => {
       </RecipesDrinksProvider>,
       { initialEntries },
     );
-    history.push('meals/52771');
+    history.push(pushMeals);
     await waitFor(() => {
       expect(fetch).toHaveBeenCalledWith(MealID);
       expect(fetch).toHaveBeenCalledWith(COCKTAILDB_URL);
-      expect(history.location.pathname).toBe('/meals/52771');
+      expect(history.location.pathname).toBe(pathnameMeals);
       const shareBtn = screen.getByTestId('share-btn');
       expect(shareBtn).toBeInTheDocument();
       // commit para reiniciar o avaliador
