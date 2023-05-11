@@ -22,10 +22,8 @@ export default function DoneRecipes() {
 
   const goToDetails = (type, id) => {
     history.push(`/${type}s/${id}`);
-    console.log('goTo');
   };
 
-  console.log(doneData);
   return (
     <>
       <Header
@@ -130,7 +128,7 @@ export default function DoneRecipes() {
               }
 
               {
-                copiedLink && <p>Link copied!</p>
+                copiedLink && <p data-testid="text-share">Link copied!</p>
               }
             </div>
           ))
