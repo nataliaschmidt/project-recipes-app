@@ -7,12 +7,34 @@ import SearchProvider from '../contexts/SearchContext/SearchProvider';
 import RecipesMealsProvider from '../contexts/RecipesMealsContext/RecipesMealsProvider';
 import RecipesDrinksProvider from '../contexts/RecipesDrinksContext/RecipesDrinksProvider';
 import mockFetch, { MEALDB_URL, COCKTAILDB_URL, MealID, DrinkID } from './helpers/dataMocks/fetch';
-// import { OneRecipeArrabiata } from './helpers/dataMocks/oneMealsRecipe';
 import recipeInProgressMeals from './helpers/dataMocks/MealRecipeInProgress';
+import drinkRecipeInProress from './helpers/dataMocks/DrinkRecipeInProgress';
 import App from '../App';
 
 const pathnameMeals = '/meals/52771';
 const pushMeals = 'meals/52771';
+const whiteHeartIcon = 'whiteHeartIcon.svg';
+const favoriteBtnId = 'favorite-btn';
+const corbaId = '/meals/52977/';
+const localMeal = {
+  id: '52977',
+  type: 'meal',
+  nationality: 'Turkish',
+  category: 'Side',
+  alcoholicOrNot: '',
+  name: 'Corba',
+  image: 'https://www.themealdb.com/images/media/meals/58oia61564916529.jpg',
+};
+
+const localDrink = {
+  id: '15997',
+  type: 'drink',
+  nationality: '',
+  category: 'Ordinary Drink',
+  alcoholicOrNot: 'Optional alcohol',
+  name: 'GG',
+  image: 'https://www.thecocktaildb.com/images/media/drink/vyxwut1468875960.jpg',
+};
 
 describe('Testando o componente RecipeDetails', () => {
   beforeEach(() => {
@@ -108,7 +130,7 @@ describe('testa se copia o link', () => {
     };
     const copy = jest.spyOn(navigator.clipboard, 'writeText');
 
-    const initialEntries = ['/meals/52977/'];
+    const initialEntries = [corbaId];
     await act(async () => {
       renderWithRouter(
         <RecipesDrinksProvider>
@@ -135,7 +157,7 @@ describe('testa se copia o link', () => {
   });
 });
 
-describe('verifica a função de favoritar', () => {
+describe('verifica a função de favoritar em meals', () => {
   beforeEach(() => {
     global.fetch = jest.fn().mockResolvedValue({
       json: jest.fn().mockResolvedValue(recipeInProgressMeals),
@@ -147,7 +169,7 @@ describe('verifica a função de favoritar', () => {
   });
 
   it('verifica se os alementos aparecem corretamente na tela', async () => {
-    const initialEntries = ['/meals/52977/'];
+    const initialEntries = [corbaId];
     await act(async () => {
       renderWithRouter(
         <RecipesDrinksProvider>
@@ -163,7 +185,7 @@ describe('verifica a função de favoritar', () => {
     await waitFor(() => {
       const recipePhoto = screen.getByRole('img', { name: /corba/i });
       const shareBtn = screen.getByTestId('share-btn');
-      const favoriteBtn = screen.getByTestId('favorite-btn');
+      const favoriteBtn = screen.getByTestId(favoriteBtnId);
       const title = screen.getByRole('heading', { name: /corba/i });
       const category = screen.getByTestId('recipe-category');
       const instructions = screen.getByTestId('instructions');
@@ -178,7 +200,7 @@ describe('verifica a função de favoritar', () => {
   });
 
   it('testa se salva no localStorage', async () => {
-    const initialEntries = ['/meals/52977/'];
+    const initialEntries = [corbaId];
     await act(async () => {
       renderWithRouter(
         <RecipesDrinksProvider>
@@ -193,14 +215,93 @@ describe('verifica a função de favoritar', () => {
     });
 
     await waitFor(async () => {
-      const favoriteBtn = screen.getByTestId('favorite-btn');
-      expect(favoriteBtn).toHaveAttribute('src', 'whiteHeartIcon.svg');
+      const favoriteBtn = screen.getByTestId(favoriteBtnId);
+      expect(favoriteBtn).toHaveAttribute('src', whiteHeartIcon);
       userEvent.click(favoriteBtn);
       const favoriteLocalStorage = JSON.parse(localStorage.getItem('favoriteRecipes'));
       expect(favoriteBtn).toHaveAttribute('src', 'blackHeartIcon.svg');
       console.log(favoriteLocalStorage);
       expect(favoriteLocalStorage).not.toBe(null);
       expect(favoriteLocalStorage.length).toEqual(1);
+      expect(favoriteLocalStorage[0]).toEqual(localMeal);
+    });
+  });
+});
+
+describe('testa a rota Drinks', () => {
+  beforeEach(() => {
+    global.fetch = jest.fn().mockResolvedValue({
+      json: jest.fn().mockResolvedValue(drinkRecipeInProress),
+    });
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('verifica se os alementos aparecem corretamente na tela', async () => {
+    const initialEntries = ['/drinks/15997/'];
+    await act(async () => {
+      renderWithRouter(
+        <RecipesDrinksProvider>
+          <RecipesMealsProvider>
+            <SearchProvider>
+              <App />
+            </SearchProvider>
+          </RecipesMealsProvider>
+        </RecipesDrinksProvider>,
+        { initialEntries },
+      );
+    });
+    await waitFor(() => {
+      const recipePhoto = screen.getByRole('img', { name: /gg/i });
+      const shareBtn = screen.getByTestId('share-btn');
+      const favoriteBtn = screen.getByTestId(favoriteBtnId);
+      const title = screen.getByRole('heading', { name: /gg/i });
+      const category = screen.getByTestId('recipe-category');
+      const instructions = screen.getByTestId('instructions');
+
+      expect(recipePhoto).toBeInTheDocument();
+      expect(shareBtn).toBeInTheDocument();
+      expect(favoriteBtn).toBeInTheDocument();
+      expect(title).toBeInTheDocument();
+      expect(category).toBeInTheDocument();
+      expect(instructions).toBeInTheDocument();
+    });
+  });
+
+  it('testa se salva no localStorage', async () => {
+    const initialEntries = ['/drinks/15997/'];
+    await act(async () => {
+      renderWithRouter(
+        <RecipesDrinksProvider>
+          <RecipesMealsProvider>
+            <SearchProvider>
+              <App />
+            </SearchProvider>
+          </RecipesMealsProvider>
+        </RecipesDrinksProvider>,
+        { initialEntries },
+      );
+    });
+
+    await waitFor(async () => {
+      const favoriteBtn = screen.getByTestId(favoriteBtnId);
+      expect(favoriteBtn).toHaveAttribute('src', whiteHeartIcon);
+      userEvent.click(favoriteBtn);
+      const favoriteLocalStorage = JSON.parse(localStorage.getItem('favoriteRecipes'));
+      expect(favoriteBtn).toHaveAttribute('src', 'blackHeartIcon.svg');
+      console.log(favoriteLocalStorage);
+      expect(favoriteLocalStorage).not.toBe(null);
+      expect(favoriteLocalStorage.length).toEqual(2);
+      expect(favoriteLocalStorage[1]).toEqual(localDrink);
+
+      act(() => {
+        userEvent.click(favoriteBtn);
+        expect(favoriteBtn).toHaveAttribute('src', whiteHeartIcon);
+        expect(favoriteLocalStorage.length).toEqual(1);
+        expect(favoriteLocalStorage[0]).toEqual(localMeal);
+      });
     });
   });
 });
