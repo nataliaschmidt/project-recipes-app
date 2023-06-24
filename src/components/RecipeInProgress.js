@@ -1,7 +1,10 @@
+/* eslint-disable max-lines */
 import React, { useCallback, useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import '../styles/RecipeInProgress.css';
 import ButtonsFavoriteAndShare from './ButtonsFavoriteAndShare';
+import HomeButton from './HomeButton';
+import Loading from './Loading';
 
 export default function RecipeInProgress() {
   const location = useLocation();
@@ -27,7 +30,10 @@ export default function RecipeInProgress() {
   const [isDisabled, setIsDisabled] = useState(true);
   const [checkedList, setCheckedList] = useState(getInitialState());
   const [recipeInProgress, setRecipeInProgress] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+
   const fetchRecipeInProgressMeals = useCallback(async () => {
+    setIsLoading(true);
     const response = await fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`);
     const data = await response.json();
     const MAGIC_NUMBER_INGREDIENTS_LIST = 20;
@@ -44,7 +50,7 @@ export default function RecipeInProgress() {
       tags: [],
     };
 
-    data.meals.forEach((meal) => {
+    data?.meals?.forEach((meal) => {
       recipeDetails.id = meal.idMeal;
       recipeDetails.image = meal.strMealThumb;
       recipeDetails.title = meal.strMeal;
@@ -60,11 +66,14 @@ export default function RecipeInProgress() {
       recipeDetails.instructions = meal.strInstructions;
       recipeDetails.video = meal.strYoutube;
       recipeDetails.nationality = meal.strArea;
-      recipeDetails.tags = meal.strTags.split(',');
+      recipeDetails.tags = meal?.strTags?.split(',');
     });
     setRecipeInProgress(recipeDetails);
+    setIsLoading(false);
   }, [id]);
+
   const fetchRecipeInProgressDrinks = useCallback(async () => {
+    setIsLoading(true);
     const response = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${id}`);
     const data = await response.json();
     const MAGIC_NUMBER_INGREDIENTS_LIST = 15;
@@ -80,7 +89,7 @@ export default function RecipeInProgress() {
       category: '',
       tags: [],
     };
-    data.drinks.forEach((drink) => {
+    data?.drinks?.forEach((drink) => {
       recipeDetails.id = drink.idDrink;
       recipeDetails.image = drink.strDrinkThumb;
       recipeDetails.title = drink.strDrink;
@@ -98,6 +107,7 @@ export default function RecipeInProgress() {
       recipeDetails.category = drink.strCategory;
     });
     setRecipeInProgress(recipeDetails);
+    setIsLoading(false);
   }, [id]);
   const saveStatusRecipe = useCallback(() => {
     let updateProgress = [];
@@ -125,16 +135,18 @@ export default function RecipeInProgress() {
     }
     localStorage.setItem('inProgressRecipes', JSON.stringify(updateProgress));
   }, [checkedList, location.pathname, id]);
+
   const handleChangeCheckbox = (target) => {
     const { value } = target;
     if (!checkedList.includes(value)) {
       setCheckedList((prevState) => [...prevState, value]);
     }
     if (checkedList.includes(value)) {
-      const newCheckedList = checkedList.filter((item) => item !== value);
+      const newCheckedList = checkedList?.filter((item) => item !== value);
       setCheckedList(newCheckedList);
     }
   };
+
   const checkDisabled = useCallback(() => {
     if (recipeInProgress) {
       if (checkedList.length === recipeInProgress?.ingredients?.length) {
@@ -144,6 +156,15 @@ export default function RecipeInProgress() {
       }
     }
   }, [checkedList.length, recipeInProgress?.ingredients?.length]);
+
+  useEffect(() => {
+    if (location.pathname.includes('meals')) {
+      fetchRecipeInProgressMeals();
+    } else {
+      fetchRecipeInProgressDrinks();
+    }
+  }, [fetchRecipeInProgressMeals, fetchRecipeInProgressDrinks, location.pathname]);
+
   useEffect(() => {
     if (!JSON.parse(localStorage.getItem('inProgressRecipes'))) {
       localStorage.setItem('inProgressRecipes', JSON.stringify({
@@ -156,13 +177,7 @@ export default function RecipeInProgress() {
     }
     saveStatusRecipe();
     checkDisabled();
-    if (location.pathname.includes('meals')) {
-      fetchRecipeInProgressMeals();
-    } else {
-      fetchRecipeInProgressDrinks();
-    }
-  }, [fetchRecipeInProgressMeals, id,
-    fetchRecipeInProgressDrinks, location.pathname, saveStatusRecipe, checkDisabled]);
+  }, [id, location.pathname, saveStatusRecipe, checkDisabled]);
   const handleClickFinishRecipe = () => {
     let doneRecipe = {};
     if (location.pathname.includes('meals')) {
@@ -197,52 +212,80 @@ export default function RecipeInProgress() {
     history.push('/done-recipes');
   };
   return (
-    <>
-      <ButtonsFavoriteAndShare
-        recipeInProgress={ recipeInProgress }
-      />
-      <img
-        className="recipeDetails-img"
-        data-testid="recipe-photo"
-        src={ recipeInProgress.image }
-        alt={ recipeInProgress.title }
-      />
-      <h2 data-testid="recipe-title">{recipeInProgress.title}</h2>
-      <p data-testid="recipe-category">{recipeInProgress.category}</p>
-      {location.pathname.includes('drinks') && <p>{recipeInProgress.alcohol}</p>}
-      <h3>Ingredients</h3>
-      <ul>
-        {
-          recipeInProgress.ingredients?.map(({ ingredient, measure }, index) => (
-            <li key={ index }>
-              <label
-                data-testid={ `${index}-ingredient-step` }
-                className={ checkedList.includes(ingredient)
-                  ? 'underline-checked'
-                  : '' }
+    <div>
+      {isLoading ? <Loading />
+        : (
+          <>
+            <div className="container-recipe-details-img">
+              <img
+                className="recipe-details-img"
+                data-testid="recipe-photo"
+                src={ recipeInProgress.image }
+                alt={ recipeInProgress.title }
+              />
+              <HomeButton />
+              <ButtonsFavoriteAndShare
+                recipeInProgress={ recipeInProgress }
+              />
+            </div>
+
+            <div className="container-info-recipes">
+              <h1 data-testid="recipe-title">{recipeInProgress.title}</h1>
+
+              {location.pathname.includes('drinks')
+                ? <h4>{recipeInProgress.alcohol}</h4>
+                : <h4 data-testid="recipe-category">{recipeInProgress.category}</h4>}
+              <h2>Ingredients</h2>
+              <div className="container-list">
+                <ul>
+                  {
+                    recipeInProgress?.ingredients?.map(({
+                      ingredient, measure,
+                    }, index) => (
+                      <li key={ index }>
+
+                        <label
+                          data-testid={ `${index}-ingredient-step` }
+                          className={ checkedList.includes(ingredient)
+                            ? 'underline-checked label-checkbox'
+                            : 'label-checkbox' }
+                        >
+                          <input
+                            className="input-in-progress"
+                            type="checkbox"
+                            value={ ingredient }
+                            name={ ingredient }
+                            checked={ checkedList.includes(ingredient) }
+                            onChange={ ({ target }) => handleChangeCheckbox(target) }
+                          />
+                          <span className="custom-checkbox" />
+                          {`${measure} - ${ingredient}`}
+                        </label>
+
+                      </li>
+                    ))
+                  }
+                </ul>
+              </div>
+              <h2>Instructions</h2>
+              <p
+                data-testid="instructions"
+                className="intructions-progress"
               >
-                <input
-                  type="checkbox"
-                  value={ ingredient }
-                  name={ ingredient }
-                  checked={ checkedList.includes(ingredient) }
-                  onChange={ ({ target }) => handleChangeCheckbox(target) }
-                />
-                {`${measure} - ${ingredient}`}
-              </label>
-            </li>
-          ))
-        }
-      </ul>
-      <h3>Instructions</h3>
-      <p data-testid="instructions">{recipeInProgress.instructions}</p>
-      <button
-        data-testid="finish-recipe-btn"
-        disabled={ isDisabled }
-        onClick={ handleClickFinishRecipe }
-      >
-        Finnish Recipe
-      </button>
-    </>
+                {recipeInProgress.instructions}
+
+              </p>
+            </div>
+            <button
+              data-testid="finish-recipe-btn"
+              disabled={ isDisabled }
+              onClick={ handleClickFinishRecipe }
+              className="btn-start-recipe finish-recipe"
+            >
+              Finnish Recipe
+            </button>
+          </>
+        )}
+    </div>
   );
 }

@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { useLocation } from 'react-router-dom';
 import RecipesDrinksContext from '../contexts/RecipesDrinksContext/RecipesDrinksContext';
 import RecipesMealsContext from '../contexts/RecipesMealsContext/RecipesMealsContext';
+import '../styles/ButtonCategory.css';
 
 export default function ButtonAll() {
   const location = useLocation();
@@ -21,6 +22,7 @@ export default function ButtonAll() {
     <button
       data-testid="All-category-filter"
       onClick={ resetRecipes }
+      className="category-button"
     >
       All
     </button>

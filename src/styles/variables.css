@@ -1,12 +1,18 @@
 :root {
 
-  --bg-color: white;
+  --bg-color: #FFFFE8;
 
-  --bg-header: #fcdc36;
+  --primary-color: #773344;
 
-  --primary-color: #41197f;
+  --secondary-color: #000411;
 
-  --secondary-cont-color: white;
+  --primary-accent-color: #CD8987;
 
-  --secondary-color: #fcc436;
+  --secondary-accent-color: #708ac8;
+
+  --font-color: #3f220f;
+
+  --neumorphism-shadow-1: #9e9e90;
+
+  --neumorphism-shadow-2: #ffffff;
 }

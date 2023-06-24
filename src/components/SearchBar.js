@@ -1,7 +1,10 @@
+/* eslint-disable react-func/max-lines-per-function */
 import React, { useCallback, useContext, useEffect } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
+import Swal from 'sweetalert2';
 import SearchContext from '../contexts/SearchContext/SearchContext';
 import '../styles/SearchBar.css';
+import 'sweetalert2/dist/sweetalert2.css';
 
 const FIRST_LETTER = 'first-letter';
 export default function SearchBar() {
@@ -15,6 +18,7 @@ export default function SearchBar() {
     setSearchDrinksResult,
     searchMealsResult,
     searchDrinksResult,
+    setIsLoadingSearch,
   } = useContext(SearchContext);
 
   // REQUISITO 11 E 12 -> REALIZAR O FETCH CONFORME A ROTA DE DRINKS OU MEALS
@@ -35,10 +39,22 @@ export default function SearchBar() {
       break;
     }
     if (searchRadio === FIRST_LETTER && searchInput.length > 1) {
-      return global.alert('Your search must have only 1 (one) character');
+      // eslint-disable-next-line no-unreachable
+      Swal.fire({
+        title: 'Error!',
+        text: 'Your search must have only 1 (one) character',
+        icon: 'error',
+        confirmButtonText: 'Cool',
+        customClass: {
+          confirmButton: 'custom-confirm-button-alert',
+        },
+      });
+      return;
+      // return global.alert('Your search must have only 1 (one) character');
     }
 
     try {
+      setIsLoadingSearch(true);
       const response = await fetch(searchUrl);
 
       const data = await response.json();
@@ -53,9 +69,20 @@ export default function SearchBar() {
         throw new Error('Sorry, we haven\'t found any recipes for these filters.');
       }
     } catch (error) {
-      global.alert(error.message);
+      Swal.fire({
+        title: 'Error!',
+        text: error.message,
+        icon: 'error',
+        confirmButtonText: 'Cool',
+        customClass: {
+          confirmButton: 'custom-confirm-button-alert',
+        },
+      });
+      // global.alert(error.message);
       setSearchDrinksResult([]);
       setSearchMealsResult([]);
+    } finally {
+      setIsLoadingSearch(false);
     }
   };
 
@@ -63,9 +90,11 @@ export default function SearchBar() {
     e.preventDefault();
     if (location.pathname === '/meals') {
       fetchSearch('https://www.themealdb.com/api/json/v1/1');
+      setSearchInput('');
     }
     if (location.pathname === '/drinks') {
       fetchSearch('https://www.thecocktaildb.com/api/json/v1/1');
+      setSearchInput('');
     }
   };
 
@@ -74,10 +103,12 @@ export default function SearchBar() {
     if (searchMealsResult.length === 1) {
       const { idMeal } = searchMealsResult[0];
       history.push(`/meals/${idMeal}`);
+      setSearchMealsResult([]);
     }
     if (searchDrinksResult.length === 1) {
       const { idDrink } = searchDrinksResult[0];
       history.push(`/drinks/${idDrink}`);
+      setSearchDrinksResult([]);
     }
   }, [searchMealsResult, history, searchDrinksResult]);
 

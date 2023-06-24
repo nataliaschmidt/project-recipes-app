@@ -7,6 +7,8 @@ import SearchProvider from './contexts/SearchContext/SearchProvider';
 import './styles/index.css';
 import RecipesMealsProvider from './contexts/RecipesMealsContext/RecipesMealsProvider';
 import RecipesDrinksProvider from './contexts/RecipesDrinksContext/RecipesDrinksProvider';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 
 ReactDOM
   .createRoot(document.getElementById('root'))

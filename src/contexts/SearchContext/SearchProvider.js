@@ -8,6 +8,7 @@ function SearchProvider({ children }) {
   const [searchRadio, setSearchRadio] = useState('');
   const [searchMealsResult, setSearchMealsResult] = useState([]);
   const [searchDrinksResult, setSearchDrinksResult] = useState([]);
+  const [isLoadingSearch, setIsLoadingSearch] = useState(false);
 
   const context = useMemo(() => ({
     searchInput,
@@ -18,6 +19,8 @@ function SearchProvider({ children }) {
     setSearchMealsResult,
     searchDrinksResult,
     setSearchDrinksResult,
+    isLoadingSearch,
+    setIsLoadingSearch,
   }), [searchInput, searchRadio, searchMealsResult, searchDrinksResult]);
   return (
     <SearchContext.Provider value={ context }>

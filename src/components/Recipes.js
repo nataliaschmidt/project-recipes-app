@@ -1,15 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import '../styles/Recipe.css';
 
 export default function Recipes({ image, name, index }) {
   return (
-    <div data-testid={ `${index}-recipe-card` }>
+    <div data-testid={ `${index}-recipe-card` } className="container-recipe">
       <img
         data-testid={ `${index}-card-img` }
         src={ image }
         alt={ `Recipe ${name}` }
       />
-      <h3 data-testid={ `${index}-card-name` }>{name}</h3>
+      <h2 data-testid={ `${index}-card-name` }>{name}</h2>
     </div>
   );
 }

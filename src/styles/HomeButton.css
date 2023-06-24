@@ -1,0 +1,35 @@
+/* .button-favorite {
+  align-items: center;
+  border: none;
+  bottom: 40px;
+  cursor: pointer;
+  display: flex;
+  height: 40px;
+  justify-content: center;
+  margin-left: 10px;
+  position: relative;
+  width: 40px;
+} */
+
+.home-button  {
+  align-items: center;
+  border: none;
+  bottom: 40px;
+  cursor: pointer;
+  display: flex;
+  height: 40px;
+  justify-content: center;
+  margin-left: 10px;
+  position: relative;
+  bottom: 250px;
+  width: 40px;
+  background: linear-gradient(145deg, #fffff8, #e6e6d1);
+  border-radius: 150px;
+  box-shadow:  2px 2px 4px var(--neumorphism-shadow-1);
+}
+
+.home-button:active {
+  background: #FFFFE8;
+  border-radius: 150px;
+  box-shadow: inset 6px 6px 4px var(--neumorphism-shadow-1);
+}

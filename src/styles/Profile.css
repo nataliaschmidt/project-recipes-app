@@ -1,0 +1,14 @@
+.email-profile {
+  font-size: 1.2em;
+  margin-top: 20px;
+  text-align: center;
+}
+
+.container-buttons-profile {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  justify-content: center;
+  margin-top: 50px;
+}

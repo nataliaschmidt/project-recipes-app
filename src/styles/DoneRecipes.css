@@ -1,0 +1,87 @@
+.container-buttons-filters {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+
+.container-card-done-recipe {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.card-recipe-done {
+  align-items: center;
+  background: linear-gradient(145deg, #fffff8, #e6e6d1);
+  border: 1px solid var(--primary-color);
+  border-radius: 20px;
+  box-shadow: 11px 11px 22px #66665d,
+    -11px -11px 22px white;
+  display: flex;
+  gap: 10px;
+  height: 240px;
+  margin-top: 10px;
+  padding: 10px 10px 0 10px;
+  width: 95%;
+}
+
+.card-recipe-done > button {
+  background-color: transparent;
+  border: none;
+}
+
+.image-recipe {
+  border-radius: 20px;
+  margin-bottom: 10px;
+  object-fit: cover;
+  width: 120px;
+}
+
+.container-recipe-infos {
+  display: flex;
+  flex-direction: column;
+  max-width: 150px;
+}
+
+.link {
+  color: var(--font-color);
+  font-size: 1.3em;
+}
+
+.btn-share-recipes {
+  align-items: center;
+  background: linear-gradient(145deg, #fffff8, #e6e6d1);
+  border: none;
+  border-radius: 150px;
+  box-shadow: 6px 6px 4px var(--neumorphism-shadow-1),
+    -2px -2px 8px var(--neumorphism-shadow-2);
+  cursor: pointer;
+  display: flex;
+  height: 40px;
+  justify-content: center;
+  position: relative;
+  right: 5px;
+  top: 60px;
+  width: 40px;
+}
+
+.btn-share-recipes:active {
+  background: #ffffe8;
+  border-radius: 150px;
+  box-shadow: inset 6px 6px 4px var(--neumorphism-shadow-1),
+    inset -2px -2px 8px var(--neumorphism-shadow-2);
+}
+
+.link-copied-done {
+  background-color: var(--primary-accent-color);
+  border-radius: 10px;
+  color: var(--primary-color);
+  margin-left: 10px;
+  margin-top: 10px;
+  padding: 2px;
+  position: fixed;
+  top: 0;
+}

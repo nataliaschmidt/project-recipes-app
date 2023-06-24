@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
+import { BsSearch } from 'react-icons/bs';
+import { CgProfile } from 'react-icons/cg';
 import ProfileIcon from '../images/profileIcon.svg';
-import SearcheIcon from '../images/searchIcon.svg';
 import SearchBar from './SearchBar';
 import '../styles/Header.css';
 
@@ -21,26 +22,19 @@ export default function Header({ title, searchIcon }) {
           onClick={ () => history.push('/profile') }
           src={ ProfileIcon }
         >
-          <img
-            data-testid="profile-top-btn"
-            src={ ProfileIcon }
-            alt="Perfil icon"
-          />
+          <CgProfile className="nav-icon" />
         </button>
 
         {
           searchIcon
-        && (
-          <button
-            onClick={ handleClickSearch }
-          >
-            <img
-              data-testid="search-top-btn"
-              src={ SearcheIcon }
-              alt="Search icon"
-            />
-          </button>
-        )
+          && (
+            <button
+              onClick={ handleClickSearch }
+            >
+              <BsSearch className="nav-icon" />
+
+            </button>
+          )
         }
       </nav>
       <h1 data-testid="page-title">{ title }</h1>

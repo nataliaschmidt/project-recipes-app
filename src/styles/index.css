@@ -6,11 +6,33 @@
   padding: 0;
 }
 
-body {
+html {
   background-color: var(--bg-color);
-  display: block;
 }
 
-main {
+body {
+background-color: var(--bg-color);
+  color: var(--font-color);
   display: block;
+  /* height: 100vh; */
 }
+
+/* main {
+  display: block;
+  height: 100%;
+  background-color: var(--bg-color);
+} */
+
+.neumorphism {
+  background: linear-gradient(145deg, #fffff8, #e6e6d1);
+  border-radius: 150px;
+  box-shadow:  6px 6px 4px var(--neumorphism-shadow-1);
+}
+
+.neumorphism:active {
+  background: #FFFFE8;
+  border-radius: 150px;
+  box-shadow: inset 6px 6px 4px var(--neumorphism-shadow-1);
+}
+
+

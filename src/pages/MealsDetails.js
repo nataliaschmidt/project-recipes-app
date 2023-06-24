@@ -1,5 +1,7 @@
-import React, { useCallback, useContext, useEffect } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
+import Slider from 'react-slick';
+import Loading from '../components/Loading';
 import RecipeDetails from '../components/RecipeDetails';
 import RecipesMealsContext from '../contexts/RecipesMealsContext/RecipesMealsContext';
 import '../styles/Carousel.css';
@@ -18,8 +20,10 @@ export default function MealsDetails() {
     setStartRecipeMeal,
     setInProgressRecipesMeal,
   } = useContext(RecipesMealsContext);
+  const [isLoading, setIsLoading] = useState(false);
 
   const fetchMealDetails = useCallback(async () => {
+    setIsLoading(true);
     const response = await fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${idMeals}`);
     const data = await response.json();
     const recipeDetails = {
@@ -34,7 +38,7 @@ export default function MealsDetails() {
       nationality: '',
     };
 
-    data.meals.forEach((meal) => {
+    data?.meals?.forEach((meal) => {
       recipeDetails.id = meal.idMeal;
       recipeDetails.image = meal.strMealThumb;
       recipeDetails.title = meal.strMeal;
@@ -53,13 +57,14 @@ export default function MealsDetails() {
       recipeDetails.nationality = meal.strArea;
     });
     setMealDetails(recipeDetails);
+    setIsLoading(false);
   }, [idMeals, setMealDetails]);
 
   const fetchDrinksRecommendations = useCallback(async () => {
     const MAX_RECOMMENDED_NUMBER = 6;
     const response = await fetch('https://www.thecocktaildb.com/api/json/v1/1/search.php?s=');
     const data = await response.json();
-    const recommended = data.drinks.slice(0, MAX_RECOMMENDED_NUMBER);
+    const recommended = data?.drinks?.slice(0, MAX_RECOMMENDED_NUMBER);
     setDrinksRecommendations(recommended);
   }, [setDrinksRecommendations]);
 
@@ -72,7 +77,6 @@ export default function MealsDetails() {
       ...progressRecipesLocalStorage,
       meals: {
         ...progressRecipesLocalStorage.meals,
-        [idMeals]: [],
       },
     };
 
@@ -86,7 +90,6 @@ export default function MealsDetails() {
       .parse(localStorage.getItem('inProgressRecipes')) || {};
     if (isInProgressRecipes.meals
       && Object.keys(isInProgressRecipes.meals)[0] === idMeals) {
-      console.log();
       setInProgressRecipesMeal(true);
       setStartRecipeMeal(true);
     } else {
@@ -104,38 +107,56 @@ export default function MealsDetails() {
     continueRecipe();
   }, [fetchMealDetails, fetchDrinksRecommendations, continueRecipe]);
 
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 2,
+    slidesToScroll: 2,
+    autoplay: true,
+    autoplaySpeed: 2000,
+  };
+
   return (
-    <>
-      <RecipeDetails />
+    <div>
+      {isLoading ? <Loading />
+        : (
+          <>
+            <RecipeDetails />
 
-      <div className="carousel">
-        {drinksRecommendations?.map((item, index) => (
-          <div
-            key={ item.strDrink }
-            data-testid={ `${index}-recommendation-card` }
-          >
-            <h3
-              data-testid={ `${index}-recommendation-title` }
+            <Slider { ...settings }>
+
+              {drinksRecommendations?.map((item, index) => (
+                <div
+                  key={ item.strDrink }
+                  data-testid={ `${index}-recommendation-card` }
+                  className="container-card-carousel"
+                >
+                  <img
+                    className="carousel-img"
+                    src={ item.strDrinkThumb }
+                    alt={ item.strDrink }
+                  />
+                  <h3
+                    data-testid={ `${index}-recommendation-title` }
+                  >
+                    {item.strDrink}
+
+                  </h3>
+                </div>
+              ))}
+
+            </Slider>
+
+            <button
+              data-testid="start-recipe-btn"
+              onClick={ startRecipe }
+              className="btn-start-recipe"
             >
-              {item.strDrink}
-
-            </h3>
-            <img
-              className="carousel-img"
-              src={ item.strDrinkThumb }
-              alt={ item.strDrink }
-            />
-          </div>
-        ))}
-      </div>
-      <button
-        data-testid="start-recipe-btn"
-        style={ { position: 'fixed', bottom: 0 } }
-        onClick={ startRecipe }
-      >
-        {!startRecipeMeal ? 'Start Recipe' : 'Continue Recipe'}
-      </button>
-    </>
-
+              {!startRecipeMeal ? 'Start Recipe' : 'Continue Recipe'}
+            </button>
+          </>
+        ) }
+    </div>
   );
 }

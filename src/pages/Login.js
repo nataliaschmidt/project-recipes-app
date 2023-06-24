@@ -1,5 +1,7 @@
+/* eslint-disable react/jsx-max-depth */
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import '../styles/Login.css';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -29,38 +31,64 @@ export default function Login() {
   };
 
   return (
-    <form>
-      <label htmlFor="email">
-        Email:
-        <input
-          data-testid="email-input"
-          type="email"
-          name="email"
-          id="email"
-          value={ email }
-          onChange={ ({ target }) => setEmail(target.value) }
-        />
-      </label>
-      <label htmlFor="password">
-        Password:
-        <input
-          data-testid="password-input"
-          type="password"
-          name="password"
-          id="password"
-          value={ password }
-          onChange={ ({ target }) => setPassword(target.value) }
-        />
-      </label>
+    <div className="container-login">
+      <div className="container-form">
+        <form>
 
-      <button
-        data-testid="login-submit-btn"
-        type="button"
-        disabled={ isDisabled }
-        onClick={ handleClick }
-      >
-        Enter
-      </button>
-    </form>
+          <div className="field">
+            <p className="control has-icons-left">
+              <input
+                placeholder="Email"
+                className="input"
+                type="email"
+                data-testid="email-input"
+                name="email"
+                value={ email }
+                onChange={ ({ target }) => setEmail(target.value) }
+              />
+              <span className="icon is-small is-left">
+                <i className="fas fa-envelope" />
+              </span>
+            </p>
+          </div>
+
+          <div className="field">
+            <p className="control has-icons-left">
+              <input
+                placeholder="Password"
+                className="input"
+                type="password"
+                data-testid="password-input"
+                name="password"
+                value={ password }
+                onChange={ ({ target }) => setPassword(target.value) }
+              />
+              <span className="icon is-small is-left">
+                <i className="fas fa-lock" />
+              </span>
+            </p>
+          </div>
+          {
+            isDisabled && (
+              <span
+                className="messagem-password"
+              >
+                Your password must be 7 characters
+
+              </span>
+            )
+          }
+          <button
+            data-testid="login-submit-btn"
+            type="button"
+            className="login-btn"
+            disabled={ isDisabled }
+            onClick={ handleClick }
+          >
+            Enter
+          </button>
+        </form>
+      </div>
+    </div>
   );
 }
