@@ -32,7 +32,7 @@ Este projeto foi desenvolvido em equipe durante o módulo de front-end do curso 
 - Clone este repositório.
 
 ```bash
-git clone https://github.com/nataliaschmidt/project-recipes-app
+git clone git@github.com:nataliaschmidt/project-recipes-app.git
 ```
 
 - Entre na pasta do repositório que você acabou de clonar.
