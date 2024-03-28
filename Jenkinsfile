@@ -24,7 +24,7 @@ pipeline {
         script {
             def pm2Status = sh(script: 'ssh ubuntu@172.17.0.1 "pm2 status Recipes"', returnStatus: true)
             if (pm2Status == 0) {
-                sh 'ssh ubuntu@172.17.0.1 "cd /home/ubuntu/apps/Recipes;export JENKINS_NODE_COOKIE=dontKillMe;pm2 stop Recipes --silent;pm2 delete Recipes --s"'
+                sh 'ssh ubuntu@172.17.0.1 "cd /home/ubuntu/apps/Recipes;export JENKINS_NODE_COOKIE=dontKillMe;pm2 stop Recipes -s;pm2 delete Recipes -s"'
             }
             sh 'ssh ubuntu@172.17.0.1 "cd /home/ubuntu/apps/Recipes;pm2 start -n Recipes npm -- start;pm2 save --force"'
         }
