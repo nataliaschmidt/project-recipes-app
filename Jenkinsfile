@@ -21,7 +21,7 @@ pipeline {
         }
         stage('Iniciar') { 
             steps {
-                    sh 'ssh ubuntu@172.17.0.1 "cd /home/ubuntu/apps/Recipes;export JENKINS_NODE_COOKIE=dontKillMe;pm2 stop Recipes --silent;pm2 delete Recipes --s"'
+                    sh 'ssh ubuntu@172.17.0.1 "cd /home/ubuntu/apps/Recipes;export JENKINS_NODE_COOKIE=dontKillMe;pm2 stop Recipes --silent;pm2 delete Recipes -s"'
                     sh 'ssh ubuntu@172.17.0.1 "cd /home/ubuntu/apps/Recipes;pm2 start -n Recipes npm -- start;pm2 save --force"' 
             }
         }
